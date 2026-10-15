@@ -1,0 +1,9 @@
+HRTF Measurements of a KEMAR Dummy-Head Microphone
+Bill Gardner and Keith Martin, MIT Media Laboratory, May 1994.
+Copyright 1994 by the MIT Media Laboratory.
+Source: https://sound.media.mit.edu/resources/KEMAR.html
+Data: https://sound.media.mit.edu/resources/KEMAR/compact.zip
+
+The authors state: "It is provided free with no restrictions on use, provided the authors are cited when the data is used in any research or commercial application."
+
+This app contains a subset of the compact stereo impulse responses at elevations -40 to +40 degrees and azimuths 0 to 90 degrees, repacked losslessly into kemar.bin. Positions on the left use mirrored ears. The data uses the small pinna measurements. FIR interpolation is performed by the app. These are generic manikin measurements, not a personalized measurement of the listener's ears. No head tracking or distance-dependent HRTF is implemented.

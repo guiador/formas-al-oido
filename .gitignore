@@ -1,0 +1,25 @@
+# Local deployments and managed hosting repository
+prototipo/
+prototipo.tar.gz
+# Builds, signing material and personal sessions
+**/build/
+**/private/
+**/tests/out/
+*.jks
+*.keystore
+*.apk
+*.exe
+*.dll
+*.class
+*.zip
+*.tar.gz
+session*.json
+preferences.json
+import-*.png
+# Downloaded Java runtimes; public provenance JSON remains tracked
+windows/tools/x32/
+windows/tools/x64/
+.vs/
+.idea/
+Thumbs.db
+.DS_Store

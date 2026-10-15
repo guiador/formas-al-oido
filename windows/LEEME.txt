@@ -1,0 +1,61 @@
+FORMAS AL OÍDO · WINDOWS 0.1
+
+Descomprime toda la carpeta. Abre Formas-al-oido.exe y conserva runtime,
+formas-engine.jar y kemar.bin junto al ejecutable. No necesitas instalar Java.
+Windows 10 u 11, con .NET Framework 4.8. Elige x64 para Windows de 64 bits
+o x86 para Windows de 32 bits. El paquete x86 también funciona en Windows x64.
+No hay paquete nativo ARM64; la compatibilidad por emulación no se ha probado.
+Este prototipo no tiene firma digital de editor.
+
+PRIMEROS PASOS
+La primera pestaña permite elegir entre 29 actividades. Escucha la descripción
+y después el contorno. Pulsa Explorar lienzo. No necesitas pantalla táctil.
+Tab y Mayúsculas+Tab recorren controles. Los botones y listas son nativos.
+Puedes mantener NVDA o Narrador. Si las voces se superponen, desactiva Voz
+propia de entrenamiento en Sonido y mando. La voz usa una voz instalada;
+instala una voz española en Windows si tu equipo sólo ofrece otro idioma.
+
+LIENZO
+Flechas: paso de 10 unidades. Mayúsculas+flechas: 2. Control+flechas: 30.
+Inicio: centro. Espacio: escuchar posición. Escape: detener. Tab: salir.
+Con ratón, mantén el botón izquierdo y desplázate dentro del lienzo.
+Con pantalla táctil, desliza un dedo; levantarlo detiene el sonido.
+Los bordes del lienzo son un marco de referencia, no el borde del monitor.
+Los botones Escuchar elemento y Elemento anterior/siguiente permiten recorrer
+sin localizar primero el trazo en pantalla. El lienzo conserva su proporción.
+
+SONIDO
+Estéreo para dos altavoces o audífonos. HRTF KEMAR para audífonos.
+Altavoz único usa un código aprendido: izquierda apagada y lenta; derecha
+brillante y rápida; centro neutro. No crea estéreo real. Activa/desactiva
+Código lateral y repite Comparar izquierda, centro y derecha al mismo volumen.
+Los perfiles Suave, Cuerda y Retro están disponibles en los tres motores.
+La altura del dibujo se representa con tono agudo o grave.
+
+MANDO Y VIBRACIÓN
+Pulsa Detectar mando conectado. Admite mandos XInput; no todos los mandos
+USB/Bluetooth son XInput. Activa control por cruceta/palanca y enfoca el lienzo.
+La vibración se activa por separado. El botón Probar vibración envía un pulso
+breve a los motores del mando. No es vibración del monitor, ratón o portátil.
+Se detiene al salir de la aplicación, perder el foco o desactivar la opción.
+Puede seguirse entrenando sin vibración. No se ha probado con un mando real.
+
+IMÁGENES Y RESULTADOS
+Importa un dibujo o foto; el procesamiento es local y acotado por contraste.
+No identifica objetos, texto ni profundidad. Incluye círculo, casa y cuadrado
+con hueco. La cámara en directo todavía no está implementada en Windows.
+Puedes tomar una captura con otra aplicación e importarla.
+Sesión permite guardar impresiones y exportar JSON. No incluye fotos, sus
+contornos ni rutas de origen. No se envía nada automáticamente a este chat.
+Los ajustes y la sesión actual se guardan en %LOCALAPPDATA%\FormasAlOido.
+El historial de la sesión que termina se conserva en session-current.json;
+la siguiente sesión lo reemplaza cuando registra su primer evento.
+
+VERIFICACIÓN Y LÍMITES
+Pruebas automáticas del núcleo y de apertura de las dos interfaces.
+La percepción del sonido, NVDA/Narrador, pantallas
+táctiles y mandos necesitan comprobación por usuarios en hardware real.
+Esta versión inicial no incluye los cuestionarios ni cámara de Android.
+
+HRTF: Bill Gardner y Keith Martin, MIT Media Laboratory, 1994.
+Ver KEMAR-NOTICE.txt. El entorno Temurin conserva sus avisos y licencias.
