@@ -52,8 +52,8 @@ public final class Sound {
   public void quiet(){program=null;touchActive=false;}
   public boolean done(){return !touchActive&&(program==null||frame>=Math.ceil(program.duration*RATE));}
   public void render(short[] out,int frames,Settings s){for(int i=0;i<frames;i++){
-   double x=300,y=225,level=0,hz=0;String kind="line";boolean envelope=true;
-   double depth=0;if(touchActive&&touch!=null){x=touch.x;y=touch.y;depth=touch.z;level=touchKind.equals("air")?.018:touchKind.equals("near")?.05:touchKind.equals("frame")?.12:.19;kind=touchKind;if(kind.equals("vertex"))level*=Math.exp(-touchAge/(.12*RATE));touchAge++;envelope=false;}
+   double x=300,y=225,level=0,hz=0;String kind="line";
+   double depth=0;if(touchActive&&touch!=null){x=touch.x;y=touch.y;depth=touch.z;level=touchKind.equals("air")?.018:touchKind.equals("near")?.05:touchKind.equals("frame")?.12:.19;kind=touchKind;if(kind.equals("vertex"))level*=Math.exp(-touchAge/(.12*RATE));touchAge++;}
    else if(program!=null){double time=frame/(double)RATE;while(spanIndex<program.spans.size()&&time>=program.spans.get(spanIndex).start+program.spans.get(spanIndex).duration)spanIndex++;if(spanIndex<program.spans.size()){Span a=program.spans.get(spanIndex);if(time>=a.start){double t=Math.max(0,Math.min(1,(time-a.start)/a.duration));x=a.a.x+(a.b.x-a.a.x)*t;y=a.a.y+(a.b.y-a.a.y)*t;kind=a.kind;hz=a.frequency;double ramp=a.kind.equals("line")?.008:.012;boolean joinedBefore=spanIndex>0&&joins(program.spans.get(spanIndex-1),a),joinedAfter=spanIndex+1<program.spans.size()&&joins(a,program.spans.get(spanIndex+1));double attack=joinedBefore?1:(time-a.start)/ramp,release=joinedAfter?1:(a.start+a.duration-time)/ramp;level=.24*Math.max(0,Math.min(1,Math.min(attack,release)));}}frame++;}
    // Smooth output control, retaining phase across all segments.
    if(program!=null&&spanIndex<program.spans.size()){Span a=program.spans.get(spanIndex);double progress=Math.max(0,Math.min(1,(frame/(double)RATE-a.start)/a.duration));depth=a.a.z+(a.b.z-a.a.z)*progress;}level/=1+Math.max(0,depth);

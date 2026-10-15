@@ -24,7 +24,7 @@ Consultar PRUEBA-EN-CLASE.md para una comparación breve de figuras conocidas, i
 
 ## Guía y ayudas
 
-29 actividades en cinco módulos: lienzo y punto; puntos en ocho direcciones y continuidad; relaciones entre líneas; curvas y polígonos; irregularidad y profundidad explícita. Las variantes cambian una propiedad anunciada. `ANALISIS-Y-APLICACION.md` documenta las decisiones y lo que queda pendiente.
+29 actividades en cinco módulos: lienzo y punto; puntos en ocho direcciones y continuidad; relaciones entre líneas; curvas y polígonos; irregularidad y profundidad explícita. Las variantes cambian una propiedad anunciada. [el diseño histórico de la versión 0.4](../docs/archive/DISENO-ANDROID-0.4.md) documenta las decisiones y lo que queda pendiente.
 
 - Marco acústico, aire espacial tenue opcional y proximidad diferenciada del contacto.
 - Vibración opcional: un pulso de entrada y dos de salida, limitada en frecuencia. Puede mezclarse con las señales de TalkBack; requiere probar el dispositivo.
@@ -67,7 +67,7 @@ Se usan javac, D8, AAPT2, zipalign y apksigner. Conservar `private/formas-prueba
 
 Pruebas JVM de extracción: dibujos, fotos sintéticas, transparencia, inversión, huecos, componentes diagonales, detalle y presupuestos. Pruebas de regresión: 2.500 geometrías anteriores; 29 actividades × 16 variantes × 3 separaciones; límites, filtros, huecos, contacto, relleno/negativo, HRTF y PCM. Compilación y firma verificadas. No hay teléfono conectado ni emulador ejecutable en el entorno: TalkBack, TTS, vibración, latencia y utilidad perceptiva requieren prueba real.
 
-Para regenerar `assets/kemar.bin`, descomprime los datos originales en `tools/kemar/` y ejecuta `node tools/pack-hrtf.cjs`. Los datos preparados ya están incluidos.
+El núcleo y las mediciones viven en `../core/`. Para regenerar `core/assets/kemar.bin`, descomprime los datos originales en `core/tools/kemar/` y, desde la raíz, ejecuta `node core/tools/pack-hrtf.cjs`. Los datos preparados ya están incluidos.
 
 ## Atribución
 

@@ -1,12 +1,13 @@
 $ErrorActionPreference='Stop'
 $workspace=Split-Path -Parent $MyInvocation.MyCommand.Path
 $root=Split-Path -Parent $workspace
+. (Join-Path $root 'tools/Build-Helpers.ps1')
 foreach($arch in @('x86','x64')){
  $output=Join-Path $workspace "build/Formas-al-oido-Windows-$arch"
  $stage=Join-Path $workspace "build/package-$arch"
- New-Item -ItemType Directory -Force -Path $stage | Out-Null
+ Reset-GeneratedDirectory $stage (Join-Path $workspace 'build')
  Copy-Item -LiteralPath "$output/Formas-al-oido.exe","$output/formas-engine.jar","$output/kemar.bin","$output/KEMAR-NOTICE.txt","$output/build-info.json","$workspace/LEEME.txt","$root/LICENSE","$root/THIRD-PARTY-NOTICES.md" -Destination $stage -Force
- if(-not(Test-Path -LiteralPath "$stage/runtime/bin/java.exe")){Copy-Item -LiteralPath "$output/runtime" -Destination "$stage/runtime" -Recurse -Force}
+ Copy-Item -LiteralPath "$output/runtime" -Destination "$stage/runtime" -Recurse -Force
  $zip=Join-Path $workspace "build/Formas-al-oido-Windows-$arch-0.1.0.zip"
  Compress-Archive -Path "$stage/*" -DestinationPath $zip -Force
  Write-Output "ZIP: $zip"

@@ -48,8 +48,10 @@ Puedes tomar una captura con otra aplicación e importarla.
 Sesión permite guardar impresiones y exportar JSON. No incluye fotos, sus
 contornos ni rutas de origen. No se envía nada automáticamente a este chat.
 Los ajustes y la sesión actual se guardan en %LOCALAPPDATA%\FormasAlOido.
-El historial de la sesión que termina se conserva en session-current.json;
-la siguiente sesión lo reemplaza cuando registra su primer evento.
+Cada sesión nueva se conserva en sessions/session-IDENTIFICADOR.json.
+Una apertura posterior ya no reemplaza los resultados de la anterior.
+Un session-current.json antiguo se conserva si existe. Exportar guarda
+la sesión abierta; todavía no hay visor del historial desde la interfaz.
 
 VERIFICACIÓN Y LÍMITES
 Pruebas automáticas del núcleo y de apertura de las dos interfaces.

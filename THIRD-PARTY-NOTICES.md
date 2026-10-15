@@ -6,7 +6,7 @@ Bill Gardner y Keith Martin, MIT Media Laboratory, 1994. Copyright MIT Media Lab
 
 Fuente y condiciones: https://sound.media.mit.edu/resources/KEMAR.html
 
-El archivo `android/assets/kemar.bin` contiene una selección reempaquetada de las respuestas compactas. Las posiciones izquierdas reflejan los oídos. Véase `android/assets/KEMAR-NOTICE.txt` para el detalle. La licencia MIT de nuestro código no sustituye las condiciones del conjunto de datos.
+El archivo `core/assets/kemar.bin` contiene una selección reempaquetada de las respuestas compactas. Las posiciones izquierdas reflejan los oídos. Véase `core/assets/KEMAR-NOTICE.txt` para el detalle. La licencia MIT de nuestro código no sustituye las condiciones del conjunto de datos.
 
 ## Eclipse Temurin / OpenJDK en los paquetes Windows
 

@@ -1,5 +1,7 @@
 # Próximos pasos
 
+Orden recomendado: accesibilidad completa, comprensión de figuras simples, resultados comparables y estabilidad. Ver [la evaluación y sus prioridades](docs/EVALUACION.md).
+
 ## Accesibilidad y uso real
 
 - Probar y corregir recorridos completos con NVDA, Narrador y TalkBack.

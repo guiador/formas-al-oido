@@ -41,7 +41,7 @@ public final class CoreChecks {
   for(int i=0;i<Curriculum.LESSONS.size();i++)if(Curriculum.LESSONS.get(i).id.equals("gap"))for(double gap:new double[]{8,15,40,120}){map.reset();Geometry g=Curriculum.scene(i,0,gap);check(map.sample(g,new Geometry.Point(300,225),0,0,35,false).kind.equals("silent"),"tolerance never fills even a small missing segment");}
   for(Sound.Span span:Sound.Program.contour(gapped,s).spans)if(span.kind.equals("line"))check(!(span.a.x<300&&span.b.x>300),"scan never invents a bridge across gap");
   check(Geometry.description(square.elements(2).get(0),2).startsWith("Centro de la región"),"region description remains region");
-  double[] energy=new double[2];long started=System.nanoTime();for(int profile=0;profile<3;profile++)for(int spatial=0;spatial<3;spatial++){
+  long started=System.nanoTime();for(int profile=0;profile<3;profile++)for(int spatial=0;spatial<3;spatial++){
    s.profile=profile;s.spatial=spatial;Sound.Renderer renderer=new Sound.Renderer(h);renderer.program(Sound.Program.guide(s));short[] buffer=new short[512];double e=0;for(int block=0;block<350;block++){renderer.render(buffer,256,s);for(short value:buffer){check(Math.abs((int)value)<28000,"bounded PCM");e+=(double)value*value;}}check(e>100000,"non silent PCM");
   }
   for(int side=0;side<2;side++){s.spatial=1;Sound.Renderer renderer=new Sound.Renderer(h);renderer.touch(new Geometry.Point(side==0?0:600,225),"region");short[] buffer=new short[512];double el=0,er=0;for(int block=0;block<60;block++){renderer.render(buffer,256,s);for(int i=0;i<256;i++){el+=(double)buffer[i*2]*buffer[i*2];er+=(double)buffer[i*2+1]*buffer[i*2+1];}}check(side==0?el>er:er>el,"audible channel orientation");}

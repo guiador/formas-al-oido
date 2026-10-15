@@ -2,7 +2,9 @@ param([string]$AndroidSdk='', [string]$Jdk='')
 $ErrorActionPreference='Stop'
 $workspace=Split-Path -Parent $MyInvocation.MyCommand.Path
 if(-not $AndroidSdk){$AndroidSdk=Join-Path $env:USERPROFILE '.codex\build-tools\evvdroid\sdk'}
-if(-not $Jdk){$Jdk=Join-Path $env:USERPROFILE '.codex\build-tools\evvdroid\jdk21\jdk-21.0.12.1+1'}
+. (Join-Path (Split-Path -Parent $workspace) 'tools/Build-Helpers.ps1')
+$Jdk=Resolve-ProjectJdk $Jdk
+$core=Join-Path (Split-Path -Parent $workspace) 'core'
 $tools=Join-Path $AndroidSdk 'build-tools\35.0.0'
 $androidJar=Join-Path $AndroidSdk 'platforms\android-36\android.jar'
 foreach($required in @("$Jdk\bin\javac.exe","$tools\aapt2.exe",$androidJar)){if(-not(Test-Path -LiteralPath $required)){throw "No se encuentra: $required"}}
@@ -11,11 +13,13 @@ $output=Join-Path $workspace 'build'
 $classes=Join-Path $output 'classes'
 $dex=Join-Path $output 'dex'
 New-Item -ItemType Directory -Force -Path $output,$classes,$dex,(Join-Path $workspace 'private') | Out-Null
-$sources=@(Get-ChildItem -LiteralPath (Join-Path $workspace 'src') -Recurse -Filter '*.java' | ForEach-Object FullName)
+Reset-GeneratedDirectory $classes $output
+Reset-GeneratedDirectory $dex $output
+$sources=@(Get-ChildItem -LiteralPath (Join-Path $workspace 'src'),(Join-Path $core 'src') -Recurse -Filter '*.java' | ForEach-Object FullName)
 Run "$Jdk\bin\javac.exe" (@('--release','8','-encoding','UTF-8','-classpath',$androidJar,'-d',$classes)+$sources)
 Run "$Jdk\bin\jar.exe" @('--create','--file',"$output\classes.jar",'-C',$classes,'.')
 Run "$Jdk\bin\java.exe" @('-cp',"$tools\lib\d8.jar",'com.android.tools.r8.D8','--lib',$androidJar,'--min-api','26','--output',$dex,"$output\classes.jar")
-Run "$tools\aapt2.exe" @('link','-I',$androidJar,'--manifest',"$workspace\AndroidManifest.xml",'-A',"$workspace\assets",'-o',"$output\unsigned.apk")
+Run "$tools\aapt2.exe" @('link','-I',$androidJar,'--manifest',"$workspace\AndroidManifest.xml",'-A',"$core/assets",'-o',"$output\unsigned.apk")
 Run "$Jdk\bin\jar.exe" @('--update','--file',"$output\unsigned.apk",'-C',$dex,'classes.dex')
 Run "$tools\zipalign.exe" @('-f','4',"$output\unsigned.apk","$output\aligned.apk")
 $keystore=Join-Path $workspace 'private\formas-pruebas.jks'

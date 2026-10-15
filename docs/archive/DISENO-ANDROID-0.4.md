@@ -1,5 +1,7 @@
 # Aplicación de las notas de exploración · versión 0.4
 
+Documento histórico. La estructura y el estado actual se describen en [la evaluación](../EVALUACION.md) y [el README](../../README.md).
+
 Se revisó el texto «Conocimiento del lienzo: límites tanto táctiles como acústicos», aportado el 15 de octubre de 2026. La implementación principal está en Android, que es el medio de prueba elegido en esta conversación. El sitio conserva el laboratorio web y distribuye el APK actualizado y sus fuentes.
 
 ## Decisiones pedagógicas

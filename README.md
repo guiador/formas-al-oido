@@ -26,7 +26,8 @@ Windows usa controles nativos accesibles por teclado. Android conserva TalkBack.
 
 | Carpeta | Contenido |
 | --- | --- |
-| `android/` | Aplicación Java nativa y núcleo compartido, compilación sin Gradle |
+| `core/` | Geometría, actividades, audio, extracción de imágenes, datos HRTF y pruebas compartidas |
+| `android/` | Interfaz Java nativa, cámara y adaptación de audio, compilación sin Gradle |
 | `windows/` | Interfaz Windows Forms, puente local al núcleo y paquetes x86/x64 |
 | `web/` | Prototipo HTML/CSS/JavaScript independiente |
 
@@ -34,7 +35,7 @@ Consulta [Android](android/README.md), [Windows](windows/README.md) y [la pauta 
 
 ## Ayuda que necesitamos
 
-Consulta [CONTRIBUTING.md](CONTRIBUTING.md) y [ROADMAP.md](ROADMAP.md). Son especialmente valiosas las pruebas con personas ciegas, NVDA/Narrador/TalkBack, monitores táctiles, mandos y distintos altavoces. También hacen falta mejoras pedagógicas, calibración sonora y evaluaciones que distingan impresiones de aciertos medidos.
+Consulta [la evaluación técnica y de uso](docs/EVALUACION.md), [CONTRIBUTING.md](CONTRIBUTING.md) y [ROADMAP.md](ROADMAP.md). Son especialmente valiosas las pruebas con personas ciegas, NVDA/Narrador/TalkBack, monitores táctiles, mandos y distintos altavoces. También hacen falta mejoras pedagógicas, calibración sonora y evaluaciones que distingan impresiones de aciertos medidos.
 
 No necesitas programar para colaborar: describe qué esperabas escuchar, qué escuchaste, con qué equipo y qué parte resultó confusa. Evita adjuntar fotos, voces o archivos con datos de otras personas sin su consentimiento. Los archivos de sesión no se envían automáticamente a ningún servicio.
 
