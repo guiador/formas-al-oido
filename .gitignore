@@ -31,3 +31,6 @@ studio-session*.json
 
 # Compiled files delivered together by project
 /Formas al oído/
+/tools/ai-cache/
+/core/assets/vision/*.onnx
+/core/assets/vision/*.download

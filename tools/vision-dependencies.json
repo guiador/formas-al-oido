@@ -1,0 +1,157 @@
+{
+  "runtime": "ONNX Runtime 1.16.3",
+  "models": "SSD-MobileNetV1 opset 12, RGB uint8 NHWC",
+  "downloads": [
+    {
+      "sha256": "84d247f3650fa15c00a4568a80f304050e1da4dca540bbe6d17493da8350242a",
+      "cache": "tools/ai-cache/ort.zip",
+      "url": "https://api.nuget.org/v3-flatcontainer/microsoft.ml.onnxruntime/1.16.3/microsoft.ml.onnxruntime.1.16.3.nupkg",
+      "files": [
+        {
+          "entry": "runtimes/win-x64/native/onnxruntime.dll",
+          "sha256": "6135d3c08003afb23b7c8997bed44d15d860e9bf8408aaa87e44fc8e4fe2fa48",
+          "target": "tools/ai-cache/x64/onnxruntime.dll"
+        },
+        {
+          "entry": "runtimes/win-x64/native/onnxruntime_providers_shared.dll",
+          "sha256": "a08d03fa0f2c4dd21bda9787a7119a5ee1cd0466892e73a8785c2db415d0edf6",
+          "target": "tools/ai-cache/x64/onnxruntime_providers_shared.dll"
+        },
+        {
+          "entry": "runtimes/win-x86/native/onnxruntime.dll",
+          "sha256": "5855f214c42cc0080b89bbd03397b2e7fb65c97630470296529e402f0a507a06",
+          "target": "tools/ai-cache/x86/onnxruntime.dll"
+        },
+        {
+          "entry": "runtimes/win-x86/native/onnxruntime_providers_shared.dll",
+          "sha256": "c4301311ed1b7f72b9cbdc6e743a49f64ac42d59026ed28cf450d738fda156f2",
+          "target": "tools/ai-cache/x86/onnxruntime_providers_shared.dll"
+        }
+      ]
+    },
+    {
+      "sha256": "0524d2a252a8b098d55f5650f8ddad2cbbcf5e625946a82d3959417786faaf88",
+      "cache": "tools/ai-cache/ort-managed.zip",
+      "url": "https://api.nuget.org/v3-flatcontainer/microsoft.ml.onnxruntime.managed/1.16.3/microsoft.ml.onnxruntime.managed.1.16.3.nupkg",
+      "files": [
+        {
+          "entry": "lib/netstandard2.0/Microsoft.ML.OnnxRuntime.dll",
+          "sha256": "9a18a07e2ca8811a222517cbe2aa94611ed19129a2a659de39f6bc1a09fb29c4",
+          "target": "tools/ai-cache/managed/Microsoft.ML.OnnxRuntime.dll"
+        }
+      ]
+    },
+    {
+      "sha256": "75b2927c51955aed63f29644a8c3263a90293e612225a1e209d992565f8f4394",
+      "cache": "tools/ai-cache/android-ort.zip",
+      "url": "https://repo.maven.apache.org/maven2/com/microsoft/onnxruntime/onnxruntime-android/1.16.3/onnxruntime-android-1.16.3.aar",
+      "files": [
+        {
+          "entry": "classes.jar",
+          "sha256": "6641d18ccd1d14a26813804e26ed96f99a789357a20e173ca16575de51f0f5c4",
+          "target": "tools/ai-cache/android/classes.jar"
+        },
+        {
+          "entry": "jni/arm64-v8a/libonnxruntime.so",
+          "sha256": "2d3e6acc6ea1a4e9d758642adf9800e7b7eedda5b8ca73378eca9d9c5010475d",
+          "target": "tools/ai-cache/android/lib/arm64-v8a/libonnxruntime.so"
+        },
+        {
+          "entry": "jni/arm64-v8a/libonnxruntime4j_jni.so",
+          "sha256": "15d87c422664c4b2cfff2aaffc8cf2f037de7b3c272cf5b6b886788a2c801aab",
+          "target": "tools/ai-cache/android/lib/arm64-v8a/libonnxruntime4j_jni.so"
+        },
+        {
+          "entry": "jni/armeabi-v7a/libonnxruntime.so",
+          "sha256": "b2fab30399199c7f563d6926304bc0fb421261f086f51ae319d5bb2bbfa57467",
+          "target": "tools/ai-cache/android/lib/armeabi-v7a/libonnxruntime.so"
+        },
+        {
+          "entry": "jni/armeabi-v7a/libonnxruntime4j_jni.so",
+          "sha256": "fdf1a04545d156c32c97bc4944ce41db223f91200b9b063c40c8a9ced31edf33",
+          "target": "tools/ai-cache/android/lib/armeabi-v7a/libonnxruntime4j_jni.so"
+        },
+        {
+          "entry": "jni/x86/libonnxruntime.so",
+          "sha256": "d09418114139ac4be3fbf3f047554c3599e8bc55de2166578c29b4581c1953c4",
+          "target": "tools/ai-cache/android/lib/x86/libonnxruntime.so"
+        },
+        {
+          "entry": "jni/x86/libonnxruntime4j_jni.so",
+          "sha256": "ab32dbd7deea80a72de8a4a5f21f828084e39f721f9d4573739868733ea97cfd",
+          "target": "tools/ai-cache/android/lib/x86/libonnxruntime4j_jni.so"
+        },
+        {
+          "entry": "jni/x86_64/libonnxruntime.so",
+          "sha256": "106b424961b529a8a0b017785e847bd731cc1042cd2ddb878f3357f7b480b708",
+          "target": "tools/ai-cache/android/lib/x86_64/libonnxruntime.so"
+        },
+        {
+          "entry": "jni/x86_64/libonnxruntime4j_jni.so",
+          "sha256": "2dd3b3f188d7e6055a381aeead724edb5417648265bc1961a679ffe841ac0a89",
+          "target": "tools/ai-cache/android/lib/x86_64/libonnxruntime4j_jni.so"
+        }
+      ]
+    },
+    {
+      "sha256": "10f43da352a29fb2b3188e4edd4dcf5100194c8b526e4f61fe2e2b5623775a22",
+      "cache": "tools/ai-cache/system.memory.zip",
+      "url": "https://api.nuget.org/v3-flatcontainer/system.memory/4.5.5/system.memory.4.5.5.nupkg",
+      "files": [
+        {
+          "entry": "lib/net461/System.Memory.dll",
+          "sha256": "bf3fb84664f4097f1a8a9bc71a51dcf8cf1a905d4080a4d290da1730866e856f",
+          "target": "tools/ai-cache/managed/System.Memory.dll"
+        }
+      ]
+    },
+    {
+      "sha256": "c30b3dd2c7e2f4cee4b823d692fd42118309b42ab1f5007f923d329a5b0d6b12",
+      "cache": "tools/ai-cache/system.buffers.zip",
+      "url": "https://api.nuget.org/v3-flatcontainer/system.buffers/4.5.1/system.buffers.4.5.1.nupkg",
+      "files": [
+        {
+          "entry": "lib/net461/System.Buffers.dll",
+          "sha256": "accccfbe45d9f08ffeed9916e37b33e98c65be012cfff6e7fa7b67210ce1fefb",
+          "target": "tools/ai-cache/managed/System.Buffers.dll"
+        }
+      ]
+    },
+    {
+      "sha256": "a9d49320581fda1b4f4be6212c68c01a22cdf228026099c20a8eabefcf90f9cf",
+      "cache": "tools/ai-cache/system.numerics.vectors.zip",
+      "url": "https://api.nuget.org/v3-flatcontainer/system.numerics.vectors/4.5.0/system.numerics.vectors.4.5.0.nupkg",
+      "files": [
+        {
+          "entry": "lib/net46/System.Numerics.Vectors.dll",
+          "sha256": "1d3ef8698281e7cf7371d1554afef5872b39f96c26da772210a33da041ba1183",
+          "target": "tools/ai-cache/managed/System.Numerics.Vectors.dll"
+        }
+      ]
+    },
+    {
+      "sha256": "96764c52a44ee1161151e48ef07489f72047a851cb55b99e9f01d6908536d1a9",
+      "cache": "tools/ai-cache/system.runtime.compilerservices.unsafe.zip",
+      "url": "https://api.nuget.org/v3-flatcontainer/system.runtime.compilerservices.unsafe/4.5.3/system.runtime.compilerservices.unsafe.4.5.3.nupkg",
+      "files": [
+        {
+          "entry": "lib/net461/System.Runtime.CompilerServices.Unsafe.dll",
+          "sha256": "66409f670315afe8610f17a4d3a1ee52d72b6a46c544cec97544e8385f90ad74",
+          "target": "tools/ai-cache/managed/System.Runtime.CompilerServices.Unsafe.dll"
+        }
+      ]
+    },
+    {
+      "sha256": "2b79e6a7fb1ec6a33f332b9b10d82d9de4b7b49dcd26b5946921bb356895c954",
+      "cache": "core/assets/vision/model.onnx",
+      "url": "https://media.githubusercontent.com/media/onnx/models/main/validated/vision/object_detection_segmentation/ssd-mobilenetv1/model/ssd_mobilenet_v1_12-int8.onnx",
+      "files": []
+    },
+    {
+      "sha256": "b8fba5e404077d4048d27fcd1667e85e27e192eb9bf51e696c46a3acd7d21058",
+      "cache": "core/assets/vision/model-standard.onnx",
+      "url": "https://media.githubusercontent.com/media/onnx/models/main/validated/vision/object_detection_segmentation/ssd-mobilenetv1/model/ssd_mobilenet_v1_12.onnx",
+      "files": []
+    }
+  ]
+}

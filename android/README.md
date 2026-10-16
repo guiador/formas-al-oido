@@ -1,4 +1,4 @@
-# Formas al oído · Android nativo 0.8.0
+# Formas al oído · Android nativo 0.9.0
 
 Aplicación Java para Android 8.0 o posterior. No usa WebView. APK de pruebas para todas las arquitecturas, firmado con la misma clave que 0.3 para permitir la actualización.
 
@@ -84,3 +84,7 @@ El APK contiene bytecode DEX sin bibliotecas .so ni restricciones ABI: es univer
 ## Taller (0.7)
 
 Nueva actividad nativa StudioActivity con grabación de trazos, fondo, capas y selección, lectura por cuadrícula, alturas aportadas y proyectos compartibles. Ver [manual del taller](../docs/TALLER-DE-TRAZOS.md). Conserva proyecto local y resultados de taller por separado. El JSON de resultados no contiene etiquetas, fotografías ni puntos de dibujo; el proyecto sí contiene trazos y debe revisarse antes de compartir.
+
+## Exploración inteligente
+
+Android 0.9 añade dos variantes locales de SSD-MobileNet y conexiones explícitas a Gemini y API compatible, con regiones ampliables e interpretaciones separadas de los contornos. Consulta docs/IMAGEN-INTELIGENTE.md. El permiso de Internet sólo se usa en este modo opcional al pulsar Enviar; el reconocimiento local no envía fotos.

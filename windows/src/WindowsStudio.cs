@@ -10,8 +10,8 @@ sealed partial class SoundCanvas {
  public bool Recording;public Action<double,double> CaptureSample,PickOrigin;
  public List<TraceShape> Traces=new List<TraceShape>();Image backgroundImage;
  public void SetBackground(Image image){if(backgroundImage!=null)backgroundImage.Dispose();backgroundImage=new Bitmap(image);Invalidate();}
- public void ClearBackground(){if(backgroundImage!=null){backgroundImage.Dispose();backgroundImage=null;}Invalidate();}
- void PaintBackgroundImage(Graphics g,RectangleF view){if(backgroundImage==null||HideDrawing)return;float scale=Math.Min(568f/backgroundImage.Width,418f/backgroundImage.Height);float w=backgroundImage.Width*scale,h=backgroundImage.Height*scale;g.DrawImage(backgroundImage,view.X+(600-w)*view.Width/1200,view.Y+(450-h)*view.Height/900,w*view.Width/600,h*view.Height/450);}
+ public void ClearBackground(){if(backgroundImage!=null){backgroundImage.Dispose();backgroundImage=null;}ImageCrop=new RectangleF(0,0,1,1);if(ImageCleared!=null)ImageCleared();Invalidate();}
+ void PaintBackgroundImage(Graphics g,RectangleF view){if(backgroundImage==null||HideDrawing)return;float baseScale=Math.Min(568f/backgroundImage.Width,418f/backgroundImage.Height);float w=backgroundImage.Width*baseScale*ImageCrop.Width,h=backgroundImage.Height*baseScale*ImageCrop.Height;float zoom=Math.Min(568f/w,418f/h);w*=zoom;h*=zoom;g.DrawImage(backgroundImage,new RectangleF(view.X+(600-w)*view.Width/1200,view.Y+(450-h)*view.Height/900,w*view.Width/600,h*view.Height/450),new RectangleF(ImageCrop.X*backgroundImage.Width,ImageCrop.Y*backgroundImage.Height,ImageCrop.Width*backgroundImage.Width,ImageCrop.Height*backgroundImage.Height),GraphicsUnit.Pixel);}
  void PaintTraces(Graphics g,RectangleF view){if(HideDrawing)return;using(Pen p=new Pen(Color.Cyan,3)){foreach(TraceShape s in Traces){PointF[] points=Array.ConvertAll(s.Points,q=>new PointF(view.X+q.X*view.Width/600,view.Y+q.Y*view.Height/450));if(points.Length==1)g.DrawEllipse(p,points[0].X-3,points[0].Y-3,6,6);else if(points.Length>1){g.DrawLines(p,points);if(s.Closed)g.DrawLine(p,points[points.Length-1],points[0]);}}}}
 }
 

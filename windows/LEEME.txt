@@ -1,7 +1,8 @@
-FORMAS AL OÍDO · WINDOWS 0.2
+FORMAS AL OÍDO · WINDOWS 0.4
 
 Descomprime toda la carpeta. Abre Formas-al-oido.exe y conserva runtime,
-formas-engine.jar y kemar.bin junto al ejecutable. No necesitas instalar Java.
+formas-engine.jar, kemar.bin, las bibliotecas DLL y vision junto al ejecutable.
+No necesitas instalar Java.
 Windows 10 u 11, con .NET Framework 4.8. Elige x64 para Windows de 64 bits
 o x86 para Windows de 32 bits. El paquete x86 también funciona en Windows x64.
 No hay paquete nativo ARM64; la compatibilidad por emulación no se ha probado.
@@ -74,3 +75,15 @@ trazos, etiquetas y tiempos. No incluyen el fondo; pueden contener datos
 personales. Resultados y proyectos se exportan por separado.
 No hay DICOM, interpretación clínica, detección facial ni conexión remota
 en directo. Se usa el mismo equipo o se comparten archivos voluntariamente.
+
+IMAGEN INTELIGENTE
+Importa una foto y abre Imagen inteligente. Incluye motores locales compacto
+y estándar, Gemini y API compatible configurables con tu propia cuenta.
+Doble clic, Intro o la lista permiten ampliar componentes. Volver al conjunto
+restaura la ubicación original. Las identificaciones y analogías son hipótesis;
+puedes ocultarlas o corregirlas. No se infiere profundidad ni identidad personal.
+Los motores locales no envían fotos. Las APIs sólo reciben la captura al pulsar
+Enviar. No hay claves incluidas y las claves introducidas no se guardan.
+ONNX Runtime puede requerir Microsoft Visual C++ Runtime de esta arquitectura.
+Licencias en vision/licenses. Guía completa y límites:
+https://github.com/guiador/formas-al-oido/blob/main/docs/IMAGEN-INTELIGENTE.md

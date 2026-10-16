@@ -17,3 +17,5 @@ if($LASTEXITCODE -ne 0){throw 'Pruebas de extracción de imágenes fallidas'}
 if($LASTEXITCODE -ne 0){throw 'Pruebas de trazado y lectura fallidas'}
 & "$Jdk/bin/java.exe" -cp $out OrientationChecks
 if($LASTEXITCODE -ne 0){throw 'Pruebas de orientación, pausa y autoría fallidas'}
+& "$Jdk/bin/java.exe" -cp $out VisionChecks
+if($LASTEXITCODE -ne 0){throw 'Pruebas de regiones y proveedores de IA fallidas'}

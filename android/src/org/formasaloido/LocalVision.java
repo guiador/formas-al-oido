@@ -1,0 +1,17 @@
+package org.formasaloido;
+import ai.onnxruntime.*;
+import android.content.Context;
+import android.graphics.Bitmap;
+import java.io.*;
+import java.nio.*;
+import java.util.*;
+
+/** Two MIT SSD-MobileNetV1 variants, CPU inference, input RGB uint8 NHWC. */
+public final class LocalVision { private static String output(OrtSession session,String prefix){for(String name:session.getOutputNames())if(name.startsWith(prefix))return name;throw new IllegalArgumentException("Salida de modelo no compatible");}
+ public static ImageScene analyze(Context context,Bitmap original,boolean standard)throws Exception{
+  Map<Integer,String> labels=new HashMap<>();try(BufferedReader in=new BufferedReader(new InputStreamReader(context.getAssets().open("vision/labels.tsv"),"UTF-8"))){String line;while((line=in.readLine())!=null){String[] a=line.split("\t",2);labels.put(Integer.parseInt(a[0]),a[1]);}}
+  byte[] model;try(InputStream in=context.getAssets().open(standard?"vision/model-standard.onnx":"vision/model.onnx");ByteArrayOutputStream out=new ByteArrayOutputStream()){byte[] chunk=new byte[16384];int n;while((n=in.read(chunk))!=-1)out.write(chunk,0,n);model=out.toByteArray();}
+  double scale=Math.min(1,320.0/Math.max(original.getWidth(),original.getHeight()));int w=Math.max(2,(int)(original.getWidth()*scale)),h=Math.max(2,(int)(original.getHeight()*scale));Bitmap image=Bitmap.createScaledBitmap(original,w,h,true);int[] pixels=new int[w*h];image.getPixels(pixels,0,w,0,0,w,h);if(image!=original)image.recycle();ByteBuffer rgb=ByteBuffer.allocateDirect(w*h*3).order(ByteOrder.nativeOrder());for(int color:pixels){rgb.put((byte)(color>>16));rgb.put((byte)(color>>8));rgb.put((byte)color);}rgb.rewind();OrtEnvironment env=OrtEnvironment.getEnvironment();
+  try(OrtSession.SessionOptions options=new OrtSession.SessionOptions()){options.setIntraOpNumThreads(2);options.setInterOpNumThreads(1);try(OrtSession session=env.createSession(model,options);OnnxTensor tensor=OnnxTensor.createTensor(env,rgb,new long[]{1,h,w,3},OnnxJavaType.UINT8);OrtSession.Result result=session.run(Collections.singletonMap(session.getInputNames().iterator().next(),tensor))){float[][][] boxes=(float[][][])result.get(output(session,"detection_boxes")).get().getValue();float[][] scores=(float[][])result.get(output(session,"detection_scores")).get().getValue();float[][] classes=(float[][])result.get(output(session,"detection_classes")).get().getValue();ImageScene scene=new ImageScene();scene.source="Hipótesis local SSD-MobileNet "+(standard?"estándar":"compacto");for(int i=0;i<scores[0].length&&scene.regions.size()<20;i++){if(scores[0][i]<.5)continue;float[] b=boxes[0][i];double l=Math.max(0,b[1]),t=Math.max(0,b[0]),r=Math.min(1,b[3]),bottom=Math.min(1,b[2]);if(r-l<.002||bottom-t<.002)continue;String name=labels.get((int)classes[0][i]);if(name!=null)scene.regions.add(new ImageScene.Region(l,t,r,bottom,"Podría ser "+name,"",scene.source));}scene.overview=scene.regions.isEmpty()?"El detector no propuso objetos por encima del umbral. Eso no demuestra que la imagen esté vacía.":"El detector propone "+scene.regions.size()+" regiones. Son identificaciones aproximadas, no confirmaciones.";for(int i=0;i<Math.min(4,scene.regions.size());i++){ImageScene.Region r=scene.regions.get(i);scene.overview+=" "+r.label+", "+Geometry.position(new Geometry.Point((r.left+r.right)*300,(r.top+r.bottom)*225))+".";}if(scene.regions.size()>4)scene.overview+=" Hay más componentes en la lista.";return scene;}}
+ }
+}

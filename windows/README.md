@@ -1,4 +1,4 @@
-# Formas al oído para Windows 0.3
+# Formas al oído para Windows 0.4
 
 Interfaz nativa Windows Forms (.NET Framework 4.8), con un proceso Java local incluido para reutilizar Geometry, Curriculum, TouchMap, ImageTrace y Sound del módulo core. No usa navegador, WebView ni servidor. El protocolo entre procesos sólo usa entrada y salida estándar. La síntesis PCM de 44.1 kHz sale por Java Sound al dispositivo predeterminado de Windows.
 
@@ -40,3 +40,7 @@ El núcleo tiene sus pruebas JVM en core/. engine-checks.cjs verifica las dos ar
 ## Taller (0.2)
 
 WindowsStudio.cs separa los controles de trazado y lectura del formulario principal. Incluye fondo visual, captura temporal, selección de trazos, regiones cerradas, fragmentos y proyectos comunes con Android. La copia local studio-current.json contiene geometría y etiquetas; las sesiones de resultados sólo guardan cantidades y ajustes. Ver [manual](../docs/TALLER-DE-TRAZOS.md).
+
+## Imagen inteligente
+
+Windows 0.4 incluye dos variantes locales de SSD-MobileNet y conexiones a Gemini/API compatible. Ver docs/IMAGEN-INTELIGENTE.md. Las compilaciones verifican dependencias mediante tools/Prepare-Vision.ps1; las inferencias locales pueden comprobarse con windows/test-vision.ps1. Falta validación humana de la interacción y de los lectores de pantalla.

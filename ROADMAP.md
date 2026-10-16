@@ -1,5 +1,9 @@
 # Próximos pasos
 
+## Implementado en Android 0.9 / Windows 0.4
+
+Captura fija con regiones seleccionables y primer plano, restauración del conjunto, hipótesis/analogías con procedencia y correcciones temporales. Dos variantes locales de SSD-MobileNetV1, Gemini Generate Content y API compatible con Chat Completions. Dependencias y modelos con hashes y licencias. [Manual y límites](docs/IMAGEN-INTELIGENTE.md). Pendiente: pruebas Android en hardware, evaluación perceptiva, segmentación neuronal, OCR y conservación/exportación voluntaria de anotaciones semánticas.
+
 Orden recomendado: accesibilidad completa, comprensión de figuras simples, resultados comparables y estabilidad. Ver [la evaluación y sus prioridades](docs/EVALUACION.md).
 
 ## Implementado en Android 0.8 / Windows 0.3

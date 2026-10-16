@@ -18,3 +18,6 @@ Los JSON en `windows/tools/` y build-info.json de cada paquete identifican binar
 - x64, 8u504-b01: https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u504-b01/OpenJDK8U-jdk-sources_8u504b01.tar.gz
 
 Proyecto y compilaciones: https://adoptium.net/ y https://github.com/adoptium/temurin8-binaries
+# Reconocimiento de imágenes
+
+La entrega Android 0.9 / Windows 0.4 incorpora ONNX Runtime 1.16.3 (MIT), paquetes auxiliares Microsoft/.NET (MIT) y SSD-MobileNetV1 opset 12 de ONNX Model Zoo en variantes int8/float32. Se incluyen las licencias, avisos de terceros, ficha del modelo y nota de procedencia en `core/assets/vision/`. La ficha específica declara MIT y se conserva también la licencia Apache-2.0 del repositorio de modelos. Los servicios Gemini y APIs compatibles se configuran por el usuario; no se redistribuyen sus modelos remotos.
