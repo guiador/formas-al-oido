@@ -8,7 +8,7 @@ $csc=Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
 $speech=Get-ChildItem -LiteralPath (Join-Path $env:WINDIR 'Microsoft.NET/assembly/GAC_MSIL/System.Speech') -Filter System.Speech.dll -Recurse | Select-Object -First 1 -ExpandProperty FullName
 $classes=Join-Path $workspace 'build/classes'
 Reset-GeneratedDirectory $classes (Join-Path $workspace 'build')
-$sources=@('Geometry','Sound','TouchMap','Curriculum','ImageTrace') | ForEach-Object {Join-Path $root "core/src/org/formasaloido/$_.java"}
+$sources=@(Get-ChildItem -LiteralPath (Join-Path $root 'core/src') -Recurse -Filter '*.java' | ForEach-Object FullName)
 & "$Jdk/bin/javac.exe" --release 8 -encoding UTF-8 -d $classes @sources "$workspace/src/DesktopEngine.java"
 if($LASTEXITCODE -ne 0){throw 'No se pudo compilar el motor'}
 & "$Jdk/bin/jar.exe" --create --file "$workspace/build/formas-engine.jar" -C $classes .
@@ -20,7 +20,7 @@ foreach($architecture in @('x32','x64')){
  $response=Join-Path $workspace "build/csc-$platform.rsp"
  $exePath=Join-Path $output 'Formas-al-oido.exe'
  $sourcePath=Join-Path $workspace 'src/FormasWindows.cs'
- @('/nologo','/target:winexe',"/platform:$platform",'/optimize+','/codepage:65001',('/out:"'+$exePath+'"'),'/reference:System.Windows.Forms.dll','/reference:System.Drawing.dll','/reference:System.Web.Extensions.dll',('/reference:"'+$speech+'"'),('"'+$sourcePath+'"')) | Set-Content -LiteralPath $response -Encoding UTF8
+ @('/nologo','/target:winexe',"/platform:$platform",'/optimize+','/codepage:65001',('/out:"'+$exePath+'"'),'/reference:System.Windows.Forms.dll','/reference:System.Drawing.dll','/reference:System.Web.Extensions.dll',('/reference:"'+$speech+'"'),('"'+$sourcePath+'"'),('"'+(Join-Path $workspace 'src/WindowsStudio.cs')+'"')) | Set-Content -LiteralPath $response -Encoding UTF8
  & $csc "@$response"
  if($LASTEXITCODE -ne 0){throw "No se pudo compilar Windows $platform"}
  Copy-Item -LiteralPath "$workspace/build/formas-engine.jar","$root/core/assets/kemar.bin","$root/core/assets/KEMAR-NOTICE.txt","$workspace/LEEME.txt" -Destination $output -Force
@@ -35,7 +35,7 @@ foreach($architecture in @('x32','x64')){
   Remove-GeneratedPath "$output/runtime" (Join-Path $workspace 'build')
   Copy-Item -LiteralPath $runtime.FullName -Destination "$output/runtime" -Recurse -Force
  }
- $provenance=[ordered]@{architecture=$platform;runtime_version=$asset.version.semver;runtime_url=$asset.binary.package.link;runtime_sha256=$asset.binary.package.checksum;app_version='0.1.0';engine_audio_version='0.6.0'}
+ $provenance=[ordered]@{architecture=$platform;runtime_version=$asset.version.semver;runtime_url=$asset.binary.package.link;runtime_sha256=$asset.binary.package.checksum;app_version='0.2.0';engine_audio_version='0.7.0'}
  $provenance | ConvertTo-Json | Set-Content -LiteralPath "$output/build-info.json" -Encoding UTF8
  Write-Output "EXE: $output/Formas-al-oido.exe"
 }

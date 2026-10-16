@@ -1,5 +1,7 @@
 # Evaluación del proyecto — 15 de octubre de 2026
 
+> Actualización posterior: Android 0.7 y Windows 0.2 añaden el taller de trazos y lectura. Consulta [su manual y límites](TALLER-DE-TRAZOS.md). Las validaciones humanas y las prioridades pedagógicas descritas aquí siguen pendientes.
+
 ## Dictamen
 
 El prototipo es viable para experimentar con figuras conocidas y recoger impresiones. Todavía necesita validar que una persona pueda aprender las reglas, reconocer figuras sin pistas y repetir ese resultado en su dispositivo. La cantidad de opciones y de pruebas automáticas no demuestra utilidad pedagógica.

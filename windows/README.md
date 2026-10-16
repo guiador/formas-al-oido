@@ -1,4 +1,4 @@
-# Formas al oído para Windows 0.1
+# Formas al oído para Windows 0.2
 
 Interfaz nativa Windows Forms (.NET Framework 4.8), con un proceso Java local incluido para reutilizar Geometry, Curriculum, TouchMap, ImageTrace y Sound del módulo core. No usa navegador, WebView ni servidor. El protocolo entre procesos sólo usa entrada y salida estándar. La síntesis PCM de 44.1 kHz sale por Java Sound al dispositivo predeterminado de Windows.
 
@@ -36,3 +36,7 @@ La sesión registra ajustes, impresiones, actividad/variante o semilla de figura
 ## Verificación
 
 El núcleo tiene sus pruebas JVM en core/. engine-checks.cjs verifica las dos arquitecturas PE, ejecución de los dos entornos, 29 escenas, coordenadas, protocolo táctil/sonoro, huecos y cierre. --smoke-test construye la interfaz real, conecta el proceso local y verifica cambio de actividad, ejemplo con hueco y exportación; utiliza una carpeta de datos separada y salida de audio silenciosa. No verifica la calidad perceptiva ni dispositivos táctiles, mandos o lectores de pantalla físicos.
+
+## Taller (0.2)
+
+WindowsStudio.cs separa los controles de trazado y lectura del formulario principal. Incluye fondo visual, captura temporal, selección de trazos, regiones cerradas, fragmentos y proyectos comunes con Android. La copia local studio-current.json contiene geometría y etiquetas; las sesiones de resultados sólo guardan cantidades y ajustes. Ver [manual](../docs/TALLER-DE-TRAZOS.md).

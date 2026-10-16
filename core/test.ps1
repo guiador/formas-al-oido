@@ -12,3 +12,6 @@ if($LASTEXITCODE -ne 0){throw 'Compilación de pruebas del núcleo fallida'}
 if($LASTEXITCODE -ne 0){throw 'Pruebas de geometría/audio fallidas'}
 & "$Jdk/bin/java.exe" -cp $out ImageChecks
 if($LASTEXITCODE -ne 0){throw 'Pruebas de extracción de imágenes fallidas'}
+
+& "$Jdk/bin/java.exe" -cp $out TraceChecks
+if($LASTEXITCODE -ne 0){throw 'Pruebas de trazado y lectura fallidas'}

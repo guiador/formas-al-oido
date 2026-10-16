@@ -24,7 +24,7 @@ Run "$Jdk\bin\jar.exe" @('--update','--file',"$output\unsigned.apk",'-C',$dex,'c
 Run "$tools\zipalign.exe" @('-f','4',"$output\unsigned.apk","$output\aligned.apk")
 $keystore=Join-Path $workspace 'private\formas-pruebas.jks'
 if(-not(Test-Path -LiteralPath $keystore)){Run "$Jdk\bin\keytool.exe" @('-genkeypair','-keystore',$keystore,'-storepass','android','-keypass','android','-alias','formas-pruebas','-keyalg','RSA','-keysize','3072','-validity','10000','-dname','CN=Formas al oido Prototype, O=Local development, C=PE')}
-$apk=Join-Path $output 'Formas-al-oido-0.6.0.apk'
+$apk=Join-Path $output 'Formas-al-oido-0.7.0.apk'
 Run "$Jdk\bin\java.exe" @('-jar',"$tools\lib\apksigner.jar",'sign','--ks',$keystore,'--ks-key-alias','formas-pruebas','--ks-pass','pass:android','--key-pass','pass:android','--out',$apk,"$output\aligned.apk")
 Run "$Jdk\bin\java.exe" @('-jar',"$tools\lib\apksigner.jar",'verify','--verbose',$apk)
 Run "$tools\aapt.exe" @('dump','badging',$apk)

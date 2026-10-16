@@ -29,3 +29,7 @@ Orden recomendado: accesibilidad completa, comprensión de figuras simples, resu
 - Evaluar instaladores, firma de binarios y soporte ARM64.
 - Definir formatos de estímulos y sesiones compartibles con consentimiento.
 - Documentar resultados negativos y límites, además de los casos prometedores.
+
+## Implementado en Android 0.7 / Windows 0.2
+
+Trazado acompañado local, repetición temporal, capas y selección, proyectos comunes, lectura por filas/columnas/cuadrantes/silueta y contorno con inicio elegido. Ejemplos sintéticos y altura relativa aportada. Pendiente: validación humana, colaboración remota, extracción semántica, DICOM y medición clínica. Ver docs/TALLER-DE-TRAZOS.md.

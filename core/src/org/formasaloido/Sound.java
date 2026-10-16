@@ -21,14 +21,19 @@ public final class Sound {
   private void addRow(double a,double e,double weight,boolean mirror,float[] l,float[] r){Measurement lo=null,hi=null;for(Measurement m:data)if(m.elevation==e){if(m.azimuth<=a&&(lo==null||m.azimuth>lo.azimuth))lo=m;if(m.azimuth>=a&&(hi==null||m.azimuth<hi.azimuth))hi=m;}if(lo==null)lo=hi;if(hi==null)hi=lo;if(lo==null)return;double t=hi.azimuth==lo.azimuth?0:(a-lo.azimuth)/(hi.azimuth-lo.azimuth);for(int k=0;k<TAPS;k++){float x=(float)(weight*((1-t)*lo.left[k]+t*hi.left[k])),y=(float)(weight*((1-t)*lo.right[k]+t*hi.right[k]));l[k]+=mirror?y:x;r[k]+=mirror?x:y;}}
  }
  public static final class Span {
-  public final Geometry.Point a,b;public final double start,duration;public final String kind;public final double frequency;
-  Span(Geometry.Point a,Geometry.Point b,double start,double duration,String kind,double frequency){this.a=a;this.b=b;this.start=start;this.duration=duration;this.kind=kind;this.frequency=frequency;}
+  public final Geometry.Point a,b;public final double start,duration;public final String kind;public final double frequency,gain;
+  Span(Geometry.Point a,Geometry.Point b,double start,double duration,String kind,double frequency){this.a=a;this.b=b;this.start=start;this.duration=duration;this.kind=kind;this.frequency=frequency;this.gain=1;}
+  Span(Geometry.Point p,double start,double duration,double gain){a=b=p;this.start=start;this.duration=duration;kind="raster";frequency=0;this.gain=gain;}
  }
  public static final class Program {
   public final List<Span> spans=new ArrayList<>();public double duration=0;final Settings settings;
   public Program(Settings s){settings=s.copy();}
   public Program silence(double seconds){duration+=seconds;return this;}
   public Program move(Geometry.Point a,Geometry.Point b){double d=Math.max(.012,a.distance(b)/160*settings.speed);spans.add(new Span(a,b,duration,d,"line",0));duration+=d;return this;}
+  public Program moveTimed(Geometry.Point a,Geometry.Point b,double seconds){double d=Math.max(.012,Math.min(5,seconds));spans.add(new Span(a,b,duration,d,"line",0));duration+=d;return this;}
+  public Program sample(Geometry.Point p,double seconds,double gain){double d=Math.max(.012,Math.min(.5,seconds));spans.add(new Span(p,duration,d,Math.max(0,Math.min(1,gain))));duration+=d;return this;}
+  public Program append(Program p){for(Span v:p.spans){if(v.kind.equals("raster"))spans.add(new Span(v.a,duration+v.start,v.duration,v.gain));else spans.add(new Span(v.a,v.b,duration+v.start,v.duration,v.kind,v.frequency));}duration+=p.duration;return this;}
+  public Program limited(double seconds){Program out=new Program(settings);for(Span v:spans){if(v.start>=seconds)break;double d=Math.min(v.duration,seconds-v.start);if(v.kind.equals("raster"))out.spans.add(new Span(v.a,v.start,d,v.gain));else{double t=d/v.duration;Geometry.Point b=new Geometry.Point(v.a.x+(v.b.x-v.a.x)*t,v.a.y+(v.b.y-v.a.y)*t,v.a.z+(v.b.z-v.a.z)*t);out.spans.add(new Span(v.a,b,v.start,d,v.kind,v.frequency));}}out.duration=Math.min(duration,seconds);return out;}
   public Program pulse(Geometry.Point p,double hz,double seconds,String kind){spans.add(new Span(p,p,duration,seconds,kind,hz));duration+=seconds;return this;}
   public Program marker(Geometry.Point p,String kind){if(!settings.markers)return this;double[] notes;
    switch(kind){case "start":notes=new double[]{600};break;case "corner":notes=new double[]{1300};break;case "turn":notes=new double[]{1000,750};break;case "bend":notes=new double[]{850};break;case "closed":notes=new double[]{660,880,660};break;default:notes=new double[]{440,330};}
@@ -54,7 +59,7 @@ public final class Sound {
   public void render(short[] out,int frames,Settings s){for(int i=0;i<frames;i++){
    double x=300,y=225,level=0,hz=0;String kind="line";
    double depth=0;if(touchActive&&touch!=null){x=touch.x;y=touch.y;depth=touch.z;level=touchKind.equals("air")?.018:touchKind.equals("near")?.05:touchKind.equals("frame")?.12:.19;kind=touchKind;if(kind.equals("vertex"))level*=Math.exp(-touchAge/(.12*RATE));touchAge++;}
-   else if(program!=null){double time=frame/(double)RATE;while(spanIndex<program.spans.size()&&time>=program.spans.get(spanIndex).start+program.spans.get(spanIndex).duration)spanIndex++;if(spanIndex<program.spans.size()){Span a=program.spans.get(spanIndex);if(time>=a.start){double t=Math.max(0,Math.min(1,(time-a.start)/a.duration));x=a.a.x+(a.b.x-a.a.x)*t;y=a.a.y+(a.b.y-a.a.y)*t;kind=a.kind;hz=a.frequency;double ramp=a.kind.equals("line")?.008:.012;boolean joinedBefore=spanIndex>0&&joins(program.spans.get(spanIndex-1),a),joinedAfter=spanIndex+1<program.spans.size()&&joins(a,program.spans.get(spanIndex+1));double attack=joinedBefore?1:(time-a.start)/ramp,release=joinedAfter?1:(a.start+a.duration-time)/ramp;level=.24*Math.max(0,Math.min(1,Math.min(attack,release)));}}frame++;}
+   else if(program!=null){double time=frame/(double)RATE;while(spanIndex<program.spans.size()&&time>=program.spans.get(spanIndex).start+program.spans.get(spanIndex).duration)spanIndex++;if(spanIndex<program.spans.size()){Span a=program.spans.get(spanIndex);if(time>=a.start){double t=Math.max(0,Math.min(1,(time-a.start)/a.duration));x=a.a.x+(a.b.x-a.a.x)*t;y=a.a.y+(a.b.y-a.a.y)*t;kind=a.kind;hz=a.frequency;double ramp=a.kind.equals("line")?.008:.012;boolean joinedBefore=spanIndex>0&&joins(program.spans.get(spanIndex-1),a),joinedAfter=spanIndex+1<program.spans.size()&&joins(a,program.spans.get(spanIndex+1));double attack=joinedBefore?1:(time-a.start)/ramp,release=joinedAfter?1:(a.start+a.duration-time)/ramp;level=.24*a.gain*Math.max(0,Math.min(1,Math.min(attack,release)));}}frame++;}
    // Smooth output control, retaining phase across all segments.
    if(program!=null&&spanIndex<program.spans.size()){Span a=program.spans.get(spanIndex);double progress=Math.max(0,Math.min(1,(frame/(double)RATE-a.start)/a.duration));depth=a.a.z+(a.b.z-a.a.z)*progress;}level/=1+Math.max(0,depth);
    amplitude+=(level-amplitude)*.012;double base=Math.sqrt(s.lowHz*s.highHz),pitch=hz>0?hz:base*Math.pow(s.highHz/s.lowHz,(.5-y/450)*s.pitch);phase+=2*Math.PI*pitch/RATE;if(phase>Math.PI*8)phase-=Math.PI*8;
@@ -67,12 +72,12 @@ public final class Sound {
    double mono=wave(phase,s.profile,bright,kind)*amplitude;
    tremoloPhase+=2*Math.PI*(4+code*2)/RATE;if(tremoloPhase>2*Math.PI)tremoloPhase-=2*Math.PI;
    // Preserve short corner/start/end cues; modulate only sustained material.
-   if(code!=0&&(kind.equals("line")||kind.equals("region")))mono*=1-.28*Math.abs(code)+.28*Math.abs(code)*Math.cos(tremoloPhase);
+   if(code!=0&&(kind.equals("line")||kind.equals("raster")||kind.equals("region")))mono*=1-.28*Math.abs(code)+.28*Math.abs(code)*Math.cos(tremoloPhase);
    if(sampleCounter++%64==0){double az=(x/300-1)*s.width,el=(.5-y/450)*2*s.elevation;if(hrir!=null&&s.spatial==1)hrir.filter(az,el,targetL,targetR);pan=Math.max(-1,Math.min(1,az/90));}
    double l=0,r=0;if(s.spatial==1&&hrir!=null){history[cursor]=(float)mono;int at=cursor;for(int k=0;k<TAPS;k++){left[k]+=(targetL[k]-left[k])*.002;right[k]+=(targetR[k]-right[k])*.002;l+=history[at]*left[k];r+=history[at]*right[k];at=(at-1)&(TAPS-1);}cursor=(cursor+1)&(TAPS-1);}else if(s.spatial==2){l=r=mono*Math.sqrt(.5);}else{l=mono*Math.sqrt((1-pan)*.5);r=mono*Math.sqrt((1+pan)*.5);}
    double gain=s.volume*2;if(s.swap){double a=l;l=r;r=a;}out[2*i]=(short)(Math.tanh(l*gain)*28000);out[2*i+1]=(short)(Math.tanh(r*gain)*28000);
   }}
   private boolean joins(Span a,Span b){return a.kind.equals("line")&&b.kind.equals("line")&&Math.abs(a.start+a.duration-b.start)<.00001;}
-  double wave(double p,int profile,double brightness,String kind){if(kind.equals("air")||kind.equals("near")){noise=(noise*1664525+1013904223)&0xffffffffL;return .7*Math.sin(p)+.3*((noise/2147483648.0)-1);}if(!kind.equals("line")&&!kind.equals("region")&&!kind.equals("vertex"))return .8*Math.sin(p)+.2*Math.sin(3*p);double v=0,weight=0;int count=3+(int)(brightness*10);for(int k=1;k<=count;k++){double a;if(profile==0)a=1.0/(k*k);else if(profile==1)a=Math.exp(-k*.28)/k;else{if(k%2==0)continue;a=1.0/k;}v+=a*Math.sin(k*p);weight+=a;}if(kind.equals("region"))v=.7*v+.15*Math.sin(p*1.25)+.15*Math.sin(p*1.5);return weight==0?0:v/weight;}
+  double wave(double p,int profile,double brightness,String kind){if(kind.equals("air")||kind.equals("near")){noise=(noise*1664525+1013904223)&0xffffffffL;return .7*Math.sin(p)+.3*((noise/2147483648.0)-1);}if(!kind.equals("line")&&!kind.equals("raster")&&!kind.equals("region")&&!kind.equals("vertex"))return .8*Math.sin(p)+.2*Math.sin(3*p);double v=0,weight=0;int count=3+(int)(brightness*10);for(int k=1;k<=count;k++){double a;if(profile==0)a=1.0/(k*k);else if(profile==1)a=Math.exp(-k*.28)/k;else{if(k%2==0)continue;a=1.0/k;}v+=a*Math.sin(k*p);weight+=a;}if(kind.equals("region"))v=.7*v+.15*Math.sin(p*1.25)+.15*Math.sin(p*1.5);return weight==0?0:v/weight;}
  }
 }

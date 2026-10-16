@@ -23,3 +23,8 @@ windows/tools/x64/
 .idea/
 Thumbs.db
 .DS_Store
+
+# Private drawing projects and workshop caches
+*.formas.json
+studio-current*.json
+studio-session*.json

@@ -1,4 +1,4 @@
-FORMAS AL OÍDO · WINDOWS 0.1
+FORMAS AL OÍDO · WINDOWS 0.2
 
 Descomprime toda la carpeta. Abre Formas-al-oido.exe y conserva runtime,
 formas-engine.jar y kemar.bin junto al ejecutable. No necesitas instalar Java.
@@ -61,3 +61,16 @@ Esta versión inicial no incluye los cuestionarios ni cámara de Android.
 
 HRTF: Bill Gardner y Keith Martin, MIT Media Laboratory, 1994.
 Ver KEMAR-NOTICE.txt. El entorno Temurin conserva sus avisos y licencias.
+
+TALLER NUEVO
+Trazar y leer permite remarcar sobre una imagen y escuchar en directo.
+Desactiva Dibujar para explorar. Puedes repetir trazos o fragmentos, cerrar
+regiones y elegir Sólo trazo seleccionado para aislar una zona del fondo.
+La lectura por filas, columnas o cuadrantes usa una cuadrícula ajustable.
+Puedes elegir esquina o marcar un inicio sin desplazar la imagen.
+El mapa de alturas sólo representa valores aportados; no infiere relieve.
+Los proyectos .formas.json funcionan también en Android 0.7 y contienen
+trazos, etiquetas y tiempos. No incluyen el fondo; pueden contener datos
+personales. Resultados y proyectos se exportan por separado.
+No hay DICOM, interpretación clínica, detección facial ni conexión remota
+en directo. Se usa el mismo equipo o se comparten archivos voluntariamente.

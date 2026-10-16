@@ -1,4 +1,4 @@
-# Formas al oído · Android nativo 0.6.0
+# Formas al oído · Android nativo 0.7.0
 
 Aplicación Java para Android 8.0 o posterior. No usa WebView. APK de pruebas para todas las arquitecturas, firmado con la misma clave que 0.3 para permitir la actualización.
 
@@ -80,3 +80,7 @@ En Sonido, Motor espacial, elige Altavoz único. Activa o desactiva Código late
 Es un código aprendido, no estéreo virtual ni HRTF para un solo altavoz. Ambos canales reciben muestras idénticas; desactivarlo elimina la información lateral mono. Los tres perfiles permanecen disponibles y los ajustes quedan en preferencias y exportación de sesión. Su utilidad perceptiva aún debe probarse con usuarios.
 
 El APK contiene bytecode DEX sin bibliotecas .so ni restricciones ABI: es universal para Android de 32 y 64 bits, incluidos ARM y x86, desde Android 8. No se ha ejecutado en hardware de ambas arquitecturas.
+
+## Taller (0.7)
+
+Nueva actividad nativa StudioActivity con grabación de trazos, fondo, capas y selección, lectura por cuadrícula, alturas aportadas y proyectos compartibles. Ver [manual del taller](../docs/TALLER-DE-TRAZOS.md). Conserva proyecto local y resultados de taller por separado. El JSON de resultados no contiene etiquetas, fotografías ni puntos de dibujo; el proyecto sí contiene trazos y debe revisarse antes de compartir.

@@ -8,11 +8,17 @@ Prototipo abierto en desarrollo. No reconoce escenas ni sustituye una ayuda de m
 
 [Descargas para Android y Windows](https://github.com/guiador/formas-al-oido/releases/latest).
 
-- **Android 0.6:** un APK universal de 32/64 bits, Android 8 o posterior. Instala el APK y comienza en Guía. Firma local de pruebas, sin credenciales incluidas en el repositorio.
-- **Windows 0.1:** paquetes portátiles x86 y x64, Windows 10/11 con .NET Framework 4.8. Descomprime toda la carpeta y abre Formas-al-oido.exe. Incluye el motor y su entorno Java; no debes instalar Java aparte. No tiene firma digital de editor. ARM64 no se ha probado.
+- **Android 0.7:** un APK universal de 32/64 bits, Android 8 o posterior. Instala el APK y comienza en Guía. Firma local de pruebas, sin credenciales incluidas en el repositorio.
+- **Windows 0.2:** paquetes portátiles x86 y x64, Windows 10/11 con .NET Framework 4.8. Descomprime toda la carpeta y abre Formas-al-oido.exe. Incluye el motor y su entorno Java; no debes instalar Java aparte. No tiene firma digital de editor. ARM64 no se ha probado.
 - **Web:** prototipo inicial estático en `web/`, con alcance menor que las versiones nativas. Sirve esa carpeta desde localhost para probarla.
 
 No necesitas pantalla táctil en Windows. En el lienzo puedes usar flechas, ratón manteniendo el botón izquierdo o un dedo en un monitor táctil. Mayúsculas permite pasos finos, Control pasos amplios, Inicio vuelve al centro, Espacio repite y Tab sale del lienzo. La vibración es opcional y, en Windows, se implementa para mandos XInput con motores compatibles.
+
+## Taller de trazos y lectura
+
+Nuevo: dibujo acompañado con sonido en directo, repetición por trazo o fragmentos, etiquetas, cierre de regiones y selección de capas. Lectura por filas, columnas, cuadrantes, silueta o contorno desde una esquina o punto elegido. Proyectos de trazos compatibles entre Android y Windows, sin incluir la foto. Ejemplos de cara esquemática, ruta y gesto cursivo. Mapas de alturas aportados con interpretación explícita.
+
+Consulta [cómo usar el taller y sus límites](docs/TALLER-DE-TRAZOS.md) y [el formato de intercambio](docs/FORMATO-DE-TRAZOS.md). No incluye detección facial, profundidad inferida, interpretación clínica, DICOM ni colaboración remota en directo.
 
 ## Qué incluye
 

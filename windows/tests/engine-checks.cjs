@@ -16,7 +16,12 @@ async function run(arch){
  try{await until('READY');assert.equal(lessonCount,29);for(let lesson=0;lesson<29;lesson++){send('GUIDE|'+lesson+'|0|70');assert(scene(await until('SCENE|')).count>0);}
   for(let mode=0;mode<3;mode++){send('SET|1|'+mode+'|0.28|true|0.7|1|0.6|65|35|true|false|0|true|18');send('TOUCH|300|225');await until('FEEDBACK|');send('HOLD');send('STOP');send('CONTOUR');send('STOP');send('PING');await until('PONG');}
   send('DEMO|1');assert.equal(scene(await until('SCENE|')).holes,1);
-  send('ELEMENT|0|0');await until('DESCRIPTION|');send('STOP');send('QUIT');
+  send('ELEMENT|0|0');await until('DESCRIPTION|');send('STOP');
+  send('DRAW_BEGIN|100|100|0|'+Buffer.from('ruta').toString('base64'));send('DRAW_MOVE|180|120|200');send('DRAW_MOVE|180|200|500');send('DRAW_END');assert.equal(scene((await until('TRACES|')).replace(/^TRACES\|[^|]+/,'SCENE|text')).count,3);
+  send('DRAW_EXPORT');const payload=(await until('PROJECT|')).split('|')[1];assert(payload.length>20);
+  send('DRAW_CLEAR');await until('TRACES|');send('DRAW_IMPORT|'+payload);await until('TRACES|');send('DRAW_CLOSE|true');await until('TRACES|');send('LAYER|1');send('DRAW_PLAY|0|0');send('STOP');
+  for(let mode=0;mode<5;mode++){send('SCAN|'+mode+'|600|450|40|0|128|255|false');if(mode<4)await until('STATUS|');send('STOP');send('PING');await until('PONG');}
+  send('DRAW_DEMO|0');let traces=await until('TRACES|');assert.equal(Buffer.from(traces.split('|')[1],'base64').toString().trim().split('\n').length,5);send('QUIT');
   await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{child.kill();reject(Error('Shutdown timeout'));},5000);child.once('exit',code=>{clearTimeout(timer);code===0?resolve():reject(Error('Exit '+code+' '+errors));});});
   console.log('PASS '+arch+': PE architecture, bundled Java, 29 lesson scenes, bounds, 3 audio settings, touch/hold/stop protocol, image hole, element description and clean shutdown.');
  }finally{if(child.exitCode===null)child.kill();}
