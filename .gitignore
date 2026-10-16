@@ -28,3 +28,6 @@ Thumbs.db
 *.formas.json
 studio-current*.json
 studio-session*.json
+
+# Compiled files delivered together by project
+/Formas al oído/

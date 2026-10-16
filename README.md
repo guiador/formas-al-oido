@@ -37,6 +37,8 @@ Windows usa controles nativos accesibles por teclado. Android conserva TalkBack.
 | `windows/` | Interfaz Windows Forms, puente local al núcleo y paquetes x86/x64 |
 | `web/` | Prototipo HTML/CSS/JavaScript independiente |
 
+Los archivos finales locales se reúnen en **Formas al oído/Android** (APK) y **Formas al oído/Windows** (ZIP x86/x64). Las carpetas build sólo contienen temporales de compilación.
+
 Consulta [Android](android/README.md), [Windows](windows/README.md) y [la pauta para una sesión de clase](PRUEBA-EN-CLASE.md). Las instrucciones admiten rutas de SDK/JDK proporcionadas por quien compila. Las carpetas de compilación, claves privadas y resultados personales están excluidos de Git.
 
 ## Ayuda que necesitamos
