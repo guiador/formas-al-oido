@@ -52,11 +52,37 @@ public final class Sound {
   final HRIR hrir;final float[] history=new float[TAPS],left=new float[TAPS],right=new float[TAPS],targetL=new float[TAPS],targetR=new float[TAPS];int cursor=0,sampleCounter=0,spanIndex=0;double phase=0,amplitude=0,pan=0,monoPosition=0,tremoloPhase=0;long noise=7;
   Program program;long frame=0,touchAge=0;Geometry.Point touch;boolean touchActive=false;String touchKind="line";
   public Renderer(HRIR h){hrir=h;}
-  public void program(Program p){program=p;frame=0;spanIndex=0;touchActive=false;}
-  public void touch(Geometry.Point p,String kind){if(!touchActive||touch==null||touch.distance(p)>.1||!touchKind.equals(kind))touchAge=0;program=null;touch=p;touchKind=kind;touchActive=true;}
-  public void quiet(){program=null;touchActive=false;}
+  boolean paused=false;long bookmark=-1,rangeEnd=Long.MAX_VALUE;
+  public void program(Program p){program=p;frame=0;spanIndex=0;touchActive=false;paused=false;bookmark=-1;rangeEnd=Long.MAX_VALUE;}
+  public void touch(Geometry.Point p,String kind){if(!touchActive||touch==null||touch.distance(p)>.1||!touchKind.equals(kind))touchAge=0;program=null;paused=false;bookmark=-1;touch=p;touchKind=kind;touchActive=true;}
+  public void quiet(){program=null;touchActive=false;paused=false;bookmark=-1;}
+  public boolean paused(){return paused;}
+  public double seconds(){return program==null?0:Math.min(program.duration,frame/(double)RATE);}
+  public double remaining(){return program==null?0:Math.max(0,program.duration-seconds());}
+  private void seek(double seconds){frame=(long)(Math.max(0,Math.min(program.duration,seconds))*RATE);spanIndex=0;amplitude=0;Arrays.fill(history,0);rangeEnd=Long.MAX_VALUE;}
+  /** Called on the audio thread (or under its lock), never from a UI thread. */
+  public String control(String action){
+   if(program==null)return "No hay un recorrido guardado. Inicia una reproducción; el contacto directo y Detener cancelan el recorrido.";
+   switch(action){
+    case "pause":paused=true;return "En pausa. "+location();
+    case "resume":if(remaining()<=0)return "Recorrido terminado. Retrocede o vuelve al marcador para repetir.";paused=false;rangeEnd=Long.MAX_VALUE;return "Continuando recorrido.";
+    case "back":seek(seconds()-5);paused=true;return "Retroceso de hasta cinco segundos. En pausa. "+location();
+    case "mark":bookmark=frame;paused=true;return "Marcador guardado. En pausa. "+location();
+    case "return":if(bookmark<0)return "Todavía no has guardado un marcador en este recorrido.";seek(bookmark/(double)RATE);paused=true;return "En el marcador. Pulsa Continuar. "+location();
+    case "fragment":{
+     if(program.duration<=0)return "Este recorrido está vacío.";
+     double end=seconds();if(end<1.0/RATE)end=Math.min(5,program.duration);
+     seek(Math.max(0,end-5));rangeEnd=(long)Math.ceil(end*RATE);paused=false;return "Repitiendo hasta cinco segundos; quedará en pausa al terminar. Continuar prosigue el recorrido.";
+    }
+    case "position":paused=true;return "En pausa. "+location();
+    default:throw new IllegalArgumentException("Control desconocido");
+   }
+  }
+  private String location(){double time=seconds();Span found=null;int n=0;for(Span s:program.spans){n++;if(time<s.start+s.duration){found=s;break;}}String prefix="Segundo "+Math.round(time)+" de "+Math.round(program.duration)+". ";if(found==null)return prefix+"Final del recorrido.";if(time<found.start)return prefix+"Pausa entre señales; la siguiente está "+Geometry.position(found.a)+".";double t=Math.max(0,Math.min(1,(time-found.start)/found.duration));Geometry.Point p=new Geometry.Point(found.a.x+(found.b.x-found.a.x)*t,found.a.y+(found.b.y-found.a.y)*t);return prefix+"Segmento sonoro "+n+" de "+program.spans.size()+", "+Geometry.position(p)+". "+(found.kind.equals("line")?"Trazo.":found.kind.equals("raster")?"Muestra de luminosidad.":"Señal de referencia o cambio.");}
   public boolean done(){return !touchActive&&(program==null||frame>=Math.ceil(program.duration*RATE));}
   public void render(short[] out,int frames,Settings s){for(int i=0;i<frames;i++){
+   if(program!=null&&frame>=rangeEnd){paused=true;rangeEnd=Long.MAX_VALUE;}
+   if(paused&&!touchActive){out[2*i]=out[2*i+1]=0;continue;}
    double x=300,y=225,level=0,hz=0;String kind="line";
    double depth=0;if(touchActive&&touch!=null){x=touch.x;y=touch.y;depth=touch.z;level=touchKind.equals("air")?.018:touchKind.equals("near")?.05:touchKind.equals("frame")?.12:.19;kind=touchKind;if(kind.equals("vertex"))level*=Math.exp(-touchAge/(.12*RATE));touchAge++;}
    else if(program!=null){double time=frame/(double)RATE;while(spanIndex<program.spans.size()&&time>=program.spans.get(spanIndex).start+program.spans.get(spanIndex).duration)spanIndex++;if(spanIndex<program.spans.size()){Span a=program.spans.get(spanIndex);if(time>=a.start){double t=Math.max(0,Math.min(1,(time-a.start)/a.duration));x=a.a.x+(a.b.x-a.a.x)*t;y=a.a.y+(a.b.y-a.a.y)*t;kind=a.kind;hz=a.frequency;double ramp=a.kind.equals("line")?.008:.012;boolean joinedBefore=spanIndex>0&&joins(program.spans.get(spanIndex-1),a),joinedAfter=spanIndex+1<program.spans.size()&&joins(a,program.spans.get(spanIndex+1));double attack=joinedBefore?1:(time-a.start)/ramp,release=joinedAfter?1:(a.start+a.duration-time)/ramp;level=.24*a.gain*Math.max(0,Math.min(1,Math.min(attack,release)));}}frame++;}

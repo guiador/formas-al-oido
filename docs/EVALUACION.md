@@ -1,5 +1,7 @@
 # Evaluación del proyecto — 15 de octubre de 2026
 
+> Android 0.8 / Windows 0.3: se incorporan orientación geométrica, control temporal y autoría por coordenadas. Ver [manual y prácticas](ORIENTACION-Y-PRACTICA.md). Se mantiene pendiente la validación humana; estas incorporaciones no aportan por sí mismas evidencia de eficacia.
+
 > Actualización posterior: Android 0.7 y Windows 0.2 añaden el taller de trazos y lectura. Consulta [su manual y límites](TALLER-DE-TRAZOS.md). Las validaciones humanas y las prioridades pedagógicas descritas aquí siguen pendientes.
 
 ## Dictamen

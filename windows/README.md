@@ -1,4 +1,4 @@
-# Formas al oído para Windows 0.2
+# Formas al oído para Windows 0.3
 
 Interfaz nativa Windows Forms (.NET Framework 4.8), con un proceso Java local incluido para reutilizar Geometry, Curriculum, TouchMap, ImageTrace y Sound del módulo core. No usa navegador, WebView ni servidor. El protocolo entre procesos sólo usa entrada y salida estándar. La síntesis PCM de 44.1 kHz sale por Java Sound al dispositivo predeterminado de Windows.
 

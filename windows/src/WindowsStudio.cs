@@ -16,12 +16,23 @@ sealed partial class SoundCanvas {
 }
 
 sealed partial class FormasForm {
+ void BuildPlayback(){var p=Page("Orientación y pausa");
+  Paragraph(p,"Consulta la vista general o tu posición. Pausar conserva el recorrido; Detener, tocar el lienzo y cambiar la escena lo cancelan. Retroceder y volver al marcador dejan el audio en pausa: pulsa Continuar cuando estés listo.");
+  Button(p,"Vista general de la capa actual",()=>Send("OVERVIEW"));
+  Button(p,"Dónde dejé el puntero",()=>Send("WHERE|"+canvas.Position.X.ToString(CultureInfo.InvariantCulture)+"|"+canvas.Position.Y.ToString(CultureInfo.InvariantCulture)));
+  string[] labels={"Pausar recorrido","Continuar recorrido","Retroceder cinco segundos y pausar","Guardar marcador y pausar","Volver al marcador","Repetir últimos cinco segundos","Dónde estoy en el recorrido"};
+  string[] commands={"pause","resume","back","mark","return","fragment","position"};
+  for(int i=0;i<labels.Length;i++){string command=commands[i];Button(p,labels[i],()=>{if(voice!=null)voice.SpeakAsyncCancelAll();Send("CONTROL|"+command);Log("playback_"+command);});}
+  Paragraph(p,"Repetir reproduce los últimos cinco segundos y pausa en el punto original. Al inicio reproduce los primeros cinco segundos. El marcador pertenece al recorrido actual. Los perfiles cambian el timbre y conservan las reglas de posición.");
+ }
  readonly object drawingCacheGate=new object();
  readonly CheckBox recordTrace=new CheckBox(),invertScan=new CheckBox(),heightDeclared=new CheckBox();
  readonly ComboBox traceSelection=new ComboBox(),layerSelection=new ComboBox(),scanMode=new ComboBox(),scanOrigin=new ComboBox();
  readonly NumericUpDown scanStep=new NumericUpDown(),scanCenter=new NumericUpDown(),scanWindow=new NumericUpDown();
  readonly TextBox traceLabel=new TextBox();bool captureOpen;int fragment=-1,scanSection=-1;PointF scanStart=new PointF(0,0);long captureEpoch=-1;
- void BuildStudio(){var p=Page("Trazar y leer");Paragraph(p,"Una persona puede dibujar o remarcar mientras otra escucha, en esta misma computadora. Desactiva Dibujar para explorar lo registrado. Los trazos conservan orden y tiempos; el fondo no se incluye al guardar el proyecto.");
+ readonly NumericUpDown coordinateX=new NumericUpDown(),coordinateY=new NumericUpDown();
+ void AddCoordinate(bool first){recordTrace.Checked=false;EndCapture();Stop();Send("DRAW_POINT|"+coordinateX.Value+"|"+coordinateY.Value+"|"+first.ToString().ToLowerInvariant()+"|"+B64(traceLabel.Text));layerSelection.SelectedIndex=1;Log(first?"coordinate_start":"coordinate_extend");}
+ void BuildStudio(){var p=Page("Trazar y leer");Number(p,coordinateX,"Coordenada horizontal: 0 izquierda, 600 derecha",0,600,300,()=>{});Number(p,coordinateY,"Coordenada vertical: 0 arriba, 450 abajo",0,450,225,()=>{});Button(p,"Crear trazo con este punto inicial",()=>AddCoordinate(true));Button(p,"Añadir punto al último trazo",()=>AddCoordinate(false));Paragraph(p,"Dibujo por coordenadas: cada punto añadido se une al anterior; usa la etiqueta antes de crear el trazo. Los tiempos de estos puntos son sintéticos, de un segundo. Deshacer elimina el trazo completo.");Paragraph(p,"Una persona puede dibujar o remarcar mientras otra escucha, en esta misma computadora. Desactiva Dibujar para explorar lo registrado. Los trazos conservan orden y tiempos; el fondo no se incluye al guardar el proyecto.");
   Paragraph(p,"Etiqueta para el siguiente trazo; es una anotación del acompañante");traceLabel.Width=650;traceLabel.MaxLength=120;traceLabel.AccessibleName="Etiqueta del siguiente trazo";p.Controls.Add(traceLabel);
   Check(p,recordTrace,"Dibujar o remarcar con sonido en directo",false,()=>{EndCapture();canvas.Recording=recordTrace.Checked;if(recordTrace.Checked){layerSelection.SelectedIndex=1;canvas.Focus();Say("Dibujo activo. Mantén el botón izquierdo o desliza un dedo. Levantar termina el trazo. Escape detiene y desactiva dibujo.");}});
   Select(p,"Capa que responde al explorar",layerSelection,new string[]{"Sólo fondo","Sólo trazos","Fondo y trazos","Sólo trazo seleccionado"},0,()=>{Stop();Send("LAYER|"+layerSelection.SelectedIndex);});

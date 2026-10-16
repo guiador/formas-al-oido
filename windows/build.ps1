@@ -35,7 +35,7 @@ foreach($architecture in @('x32','x64')){
   Remove-GeneratedPath "$output/runtime" (Join-Path $workspace 'build')
   Copy-Item -LiteralPath $runtime.FullName -Destination "$output/runtime" -Recurse -Force
  }
- $provenance=[ordered]@{architecture=$platform;runtime_version=$asset.version.semver;runtime_url=$asset.binary.package.link;runtime_sha256=$asset.binary.package.checksum;app_version='0.2.0';engine_audio_version='0.7.0'}
+ $provenance=[ordered]@{architecture=$platform;runtime_version=$asset.version.semver;runtime_url=$asset.binary.package.link;runtime_sha256=$asset.binary.package.checksum;app_version='0.3.0';engine_audio_version='0.8.0'}
  $provenance | ConvertTo-Json | Set-Content -LiteralPath "$output/build-info.json" -Encoding UTF8
  Write-Output "EXE: $output/Formas-al-oido.exe"
 }

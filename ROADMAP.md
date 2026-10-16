@@ -2,6 +2,10 @@
 
 Orden recomendado: accesibilidad completa, comprensión de figuras simples, resultados comparables y estabilidad. Ver [la evaluación y sus prioridades](docs/EVALUACION.md).
 
+## Implementado en Android 0.8 / Windows 0.3
+
+Resumen geométrico de la capa, consulta de puntero y posición sonora, pausa/continuación, retroceso y repetición de cinco segundos, marcador temporal y creación de trazos por coordenadas. [Manual y prácticas de clase](docs/ORIENTACION-Y-PRACTICA.md). Pendiente: edición individual y rehacer, SVG, relaciones topológicas, evaluación automática de reconstrucciones y descripción semántica opcional.
+
 ## Accesibilidad y uso real
 
 - Probar y corregir recorridos completos con NVDA, Narrador y TalkBack.

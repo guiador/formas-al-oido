@@ -17,6 +17,11 @@ async function run(arch){
   for(let mode=0;mode<3;mode++){send('SET|1|'+mode+'|0.28|true|0.7|1|0.6|65|35|true|false|0|true|18');send('TOUCH|300|225');await until('FEEDBACK|');send('HOLD');send('STOP');send('CONTOUR');send('STOP');send('PING');await until('PONG');}
   send('DEMO|1');assert.equal(scene(await until('SCENE|')).holes,1);
   send('ELEMENT|0|0');await until('DESCRIPTION|');send('STOP');
+  send('OVERVIEW');assert(Buffer.from((await until('ORIENTATION|')).split('|')[1],'base64').toString().includes('geometría disponible'));
+  send('WHERE|300|225');assert(Buffer.from((await until('ORIENTATION|')).split('|')[1],'base64').toString().includes('puntero'));
+  send('CONTOUR');for(const action of ['pause','mark','back','return','position']){send('CONTROL|'+action);const report=Buffer.from((await until('ORIENTATION|')).split('|')[1],'base64').toString();assert(!report.includes('No hay un recorrido'),report);}
+  send('CONTROL|resume');await until('STATUS|');send('CONTROL|fragment');await until('STATUS|');send('STOP');send('CONTROL|return');assert(Buffer.from((await until('ORIENTATION|')).split('|')[1],'base64').toString().includes('No hay un recorrido'));
+  send('DRAW_POINT|20|30|true|'+Buffer.from('Coordenadas').toString('base64'));await until('TRACES|');send('DRAW_POINT|120|30|false|');assert.equal(scene((await until('TRACES|')).replace(/^TRACES\|[^|]+/,'SCENE|text')).count,2);send('DRAW_CLEAR');await until('TRACES|');
   send('DRAW_BEGIN|100|100|0|'+Buffer.from('ruta').toString('base64'));send('DRAW_MOVE|180|120|200');send('DRAW_MOVE|180|200|500');send('DRAW_END');assert.equal(scene((await until('TRACES|')).replace(/^TRACES\|[^|]+/,'SCENE|text')).count,3);
   send('DRAW_EXPORT');const payload=(await until('PROJECT|')).split('|')[1];assert(payload.length>20);
   send('DRAW_CLEAR');await until('TRACES|');send('DRAW_IMPORT|'+payload);await until('TRACES|');send('DRAW_CLOSE|true');await until('TRACES|');send('LAYER|1');send('DRAW_PLAY|0|0');send('STOP');

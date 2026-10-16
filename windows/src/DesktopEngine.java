@@ -25,7 +25,7 @@ public final class DesktopEngine {
   AudioFormat format=new AudioFormat(Sound.RATE,16,2,true,false);
   output=AudioSystem.getSourceDataLine(format);output.open(format,4096);output.start();
   short[] pcm=new short[512];byte[] bytes=new byte[1024];
-  while(running){boolean active;synchronized(gate){active=touching||System.nanoTime()<audibleUntil;if(active)renderer.render(pcm,256,settings);}
+  while(running){boolean active;synchronized(gate){active=touching||(!renderer.paused()&&System.nanoTime()<audibleUntil);if(active)renderer.render(pcm,256,settings);}
    if(!active){Thread.sleep(15);continue;}
    for(int i=0;i<pcm.length;i++){bytes[i*2]=(byte)pcm[i];bytes[i*2+1]=(byte)(pcm[i]>>8);}output.write(bytes,0,bytes.length);
   }
@@ -41,6 +41,9 @@ public final class DesktopEngine {
   case "RANDOM":stop();raster=null;heightMode=false;geometry=new Geometry(Long.parseLong(a[1]),Integer.parseInt(a[2]));scene("Exploración libre. Figura nueva. Escucha el contorno antes de recorrerla.");break;
   case "SET":settings.profile=Integer.parseInt(a[1]);settings.spatial=Integer.parseInt(a[2]);settings.volume=Double.parseDouble(a[3]);settings.monoLateral=Boolean.parseBoolean(a[4]);settings.monoAmount=Double.parseDouble(a[5]);settings.speed=Double.parseDouble(a[6]);settings.brightness=Double.parseDouble(a[7]);settings.width=Double.parseDouble(a[8]);settings.elevation=Double.parseDouble(a[9]);settings.markers=Boolean.parseBoolean(a[10]);settings.swap=Boolean.parseBoolean(a[11]);surface=Integer.parseInt(a[12]);air=Boolean.parseBoolean(a[13]);tolerance=Double.parseDouble(a[14]);break;
   case "STOP":stop();map.reset();lastFeedback="";break;
+  case "CONTROL":{String message=renderer.control(a[1]);touching=false;if(output!=null)output.flush();audibleUntil=renderer.paused()?0:System.nanoTime()+(long)((renderer.remaining()+.2)*1e9);send((a[1].equals("resume")||a[1].equals("fragment")?"STATUS|":"ORIENTATION|")+text(message));break;}
+  case "OVERVIEW":renderer.control("pause");touching=false;audibleUntil=0;if(output!=null)output.flush();send("ORIENTATION|"+text((layer==0?"Fondo: ":layer==2?"Fondo y trazos: ":"Trazos aportados: ")+Orientation.overview(activeGeometry())));break;
+  case "WHERE":renderer.control("pause");touching=false;audibleUntil=0;if(output!=null)output.flush();send("ORIENTATION|"+text(Orientation.at(activeGeometry(),new Geometry.Point(Double.parseDouble(a[1]),Double.parseDouble(a[2])))));break;
   case "TOUCH":{if(heightMode&&raster!=null){Geometry.Point q=new Geometry.Point(Double.parseDouble(a[1]),Double.parseDouble(a[2]));if(!raster.contains(q))stop();else{renderer.touch(new Geometry.Point(q.x,q.y,4*(1-raster.value(q,scanCenter,scanWindow,scanInvert))),"line");touching=true;}break;}TouchMap.Feedback f=map.sample(activeGeometry(),new Geometry.Point(Double.parseDouble(a[1]),Double.parseDouble(a[2])),surface,0,tolerance,air);if(f.kind.equals("silent")){stop();}else{renderer.touch(f.position,f.kind);touching=true;}String next=f.kind+"|"+f.component;if(!next.equals(lastFeedback)){send("FEEDBACK|"+next);lastFeedback=next;}break;}
   case "HOLD":touching=false;audibleUntil=System.nanoTime()+220000000L;break;
   case "CONTOUR":play(Sound.Program.contour(activeGeometry(),settings));break;
@@ -53,14 +56,15 @@ public final class DesktopEngine {
   case "DRAW_MOVE":drawing.add(Double.parseDouble(a[1]),Double.parseDouble(a[2]),Long.parseLong(a[3]));renderer.touch(new Geometry.Point(Double.parseDouble(a[1]),Double.parseDouble(a[2])),"line");touching=true;break;
   case "DRAW_END":if(a.length>1)drawing.finish(Long.parseLong(a[1]));else drawing.end();stop();traces();break;
   case "DRAW_UNDO":stop();drawing.undo();traces();break;
+  case "DRAW_POINT":stop();drawing.coordinate(Double.parseDouble(a[1]),Double.parseDouble(a[2]),Boolean.parseBoolean(a[3]),new String(Base64.getDecoder().decode(a[4]),java.nio.charset.StandardCharsets.UTF_8));traces();break;
   case "DRAW_CLEAR":stop();drawing.clear();traces();break;
-  case "DRAW_CLOSE":if(!drawing.strokes().isEmpty())drawing.strokes().get(drawing.strokes().size()-1).closed=Boolean.parseBoolean(a[1]);traces();break;
+  case "DRAW_CLOSE":stop();if(!drawing.strokes().isEmpty())drawing.strokes().get(drawing.strokes().size()-1).closed=Boolean.parseBoolean(a[1]);traces();break;
   case "DRAW_PLAY":play(drawing.playback(settings,Integer.parseInt(a[1]),Integer.parseInt(a[2])));break;
   case "DRAW_EXPORT":drawing.end();send("PROJECT|"+(a.length>1?a[1]+"|":"")+drawing.encode());break;
   case "DRAW_IMPORT":{TraceDrawing incoming=TraceDrawing.decode(a[1]);stop();drawing=incoming;traces();break;}
   case "DRAW_DEMO":stop();drawing=TraceDrawing.demo(Integer.parseInt(a[1]));traces();break;
-  case "LAYER":layer=Integer.parseInt(a[1]);if(layer<0||layer>3)throw new IllegalArgumentException();map.reset();break;
-  case "SELECT_TRACE":focusedTrace=Integer.parseInt(a[1]);break;
+  case "LAYER":stop();layer=Integer.parseInt(a[1]);if(layer<0||layer>3)throw new IllegalArgumentException();map.reset();break;
+  case "SELECT_TRACE":if(layer==3)stop();focusedTrace=Integer.parseInt(a[1]);break;
   case "HEIGHT":heightMode=Boolean.parseBoolean(a[1]);if(heightMode&&raster==null){heightMode=false;throw new IllegalArgumentException("Falta imagen");}break;
   case "SCAN":{stop();int scanMode=Integer.parseInt(a[1]);Geometry.Point origin=new Geometry.Point(Double.parseDouble(a[2]),Double.parseDouble(a[3]));scanCenter=Math.max(0,Math.min(255,Integer.parseInt(a[6])));scanWindow=Math.max(1,Math.min(255,Integer.parseInt(a[7])));scanInvert=Boolean.parseBoolean(a[8]);if(scanMode==4)play(ImageScan.contour(activeGeometry(),settings,origin));else{ImageScan scan=new ImageScan(activeGeometry(),raster,settings,scanMode,origin,Integer.parseInt(a[4]),scanCenter,scanWindow,scanInvert);int selected=Integer.parseInt(a[5]);send("STATUS|"+text(selected<0?"Lectura completa: "+scan.sections.size()+" secciones. Límite de 180 segundos.":scan.sections.get(selected).name));play(scan.program(settings,selected));}break;}
   case "PING":send("PONG");break;

@@ -1,4 +1,4 @@
-# Formas al oído · Android nativo 0.7.0
+# Formas al oído · Android nativo 0.8.0
 
 Aplicación Java para Android 8.0 o posterior. No usa WebView. APK de pruebas para todas las arquitecturas, firmado con la misma clave que 0.3 para permitir la actualización.
 

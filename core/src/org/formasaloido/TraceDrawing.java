@@ -21,6 +21,14 @@ public final class TraceDrawing {
  public void add(double x,double y,long time){if(current==null)throw new IllegalStateException("Inicia un trazo");Sample p=new Sample(x,y,time),last=current.samples.get(current.samples.size()-1);if(time<last.time)throw new IllegalArgumentException("Tiempo fuera de orden");if(p.point.distance(last.point)<.4&&time-last.time<100)return;if(count>=MAX_POINTS)throw new IllegalStateException("Límite de puntos alcanzado");cachedGeometry=null;current.samples.add(p);count++;}
  public void finish(long time){if(current!=null&&count<MAX_POINTS){Sample last=current.samples.get(current.samples.size()-1);add(last.point.x,last.point.y,time);}end();}
  public void end(){current=null;}
+ /** Deliberate coordinate entry uses synthetic one-second steps, not recorded gesture time. */
+ public void coordinate(double x,double y,boolean newStroke,String label){
+  new Sample(x,y,0);if(newStroke){begin(x,y,0,label);end();return;}
+  if(strokes.isEmpty())throw new IllegalStateException("Crea primero un trazo con un punto inicial");
+  Stroke s=strokes.get(strokes.size()-1);if(s.closed)throw new IllegalStateException("El último trazo está cerrado; inicia otro");
+  if(count>=MAX_POINTS)throw new IllegalStateException("Límite de puntos alcanzado");
+  long time=s.samples.get(s.samples.size()-1).time+1000;Sample p=new Sample(x,y,time);end();s.samples.add(p);count++;cachedGeometry=null;
+ }
  public void undo(){cachedGeometry=null;end();if(!strokes.isEmpty())count-=strokes.remove(strokes.size()-1).samples.size();}
  public void clear(){cachedGeometry=null;end();strokes.clear();count=0;}
  public Geometry geometry(){if(cachedGeometry!=null){boolean same=cachedClosed.length==strokes.size();for(int i=0;same&&i<cachedClosed.length;i++)same=cachedClosed[i]==strokes.get(i).closed;if(same)return cachedGeometry;}cachedClosed=new boolean[strokes.size()];for(int i=0;i<cachedClosed.length;i++)cachedClosed[i]=strokes.get(i).closed;List<Geometry.Shape> shapes=new ArrayList<>();for(Stroke s:strokes){List<Geometry.Point> points=new ArrayList<>();for(Sample p:s.samples)points.add(p.point);shapes.add(new Geometry.Shape(points,s.closed,true));}cachedGeometry=new Geometry(0,shapes);return cachedGeometry;}
