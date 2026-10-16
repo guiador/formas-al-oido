@@ -6,11 +6,11 @@ Prototipo abierto en desarrollo. Las interpretaciones de imágenes son aproximad
 
 ## Descargar y empezar
 
-Android 0.9 / Windows 0.4: nueva exploración inteligente de capturas con componentes ampliables, dos variantes locales de SSD-MobileNet, Gemini y API compatible configurables. Las interpretaciones y analogías están separadas de la geometría. [Manual, privacidad, licencias y límites](docs/IMAGEN-INTELIGENTE.md).
+Android 0.9.1 / Windows 0.4: nueva exploración inteligente de capturas con componentes ampliables, dos variantes locales de SSD-MobileNet, Gemini y API compatible configurables. Las interpretaciones y analogías están separadas de la geometría. [Manual, privacidad, licencias y límites](docs/IMAGEN-INTELIGENTE.md).
 
 [Descargas para Android y Windows](https://github.com/guiador/formas-al-oido/releases/latest).
 
-- **Android 0.9:** un APK universal de 32/64 bits, Android 8 o posterior. Instala el APK y comienza en Guía. Firma local de pruebas, sin credenciales incluidas en el repositorio.
+- **Android 0.9.1:** un APK universal de 32/64 bits, Android 8 o posterior. Instala el APK y comienza en Guía. Firma local de pruebas, sin credenciales incluidas en el repositorio.
 - **Windows 0.4:** paquetes portátiles x86 y x64, Windows 10/11 con .NET Framework 4.8. Descomprime toda la carpeta y abre Formas-al-oido.exe. Incluye el motor y su entorno Java; no debes instalar Java aparte. No tiene firma digital de editor. ARM64 no se ha probado.
 - **Web:** prototipo inicial estático en `web/`, con alcance menor que las versiones nativas. Sirve esa carpeta desde localhost para probarla.
 

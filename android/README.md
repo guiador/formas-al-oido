@@ -1,4 +1,4 @@
-# Formas al oído · Android nativo 0.9.0
+# Formas al oído · Android nativo 0.9.1
 
 Aplicación Java para Android 8.0 o posterior. No usa WebView. APK de pruebas para todas las arquitecturas, firmado con la misma clave que 0.3 para permitir la actualización.
 
@@ -16,7 +16,7 @@ Consultar PRUEBA-EN-CLASE.md para una comparación breve de figuras conocidas, i
 
 ## Empezar
 
-1. Instala `build/Formas-al-oido-0.6.0.apk` sobre la versión anterior. Exporta la sesión si quieres una copia adicional.
+1. Instala `../Formas al oído/Android/Formas-al-oido-0.9.1.apk` sobre la versión anterior. Exporta la sesión si quieres una copia adicional.
 2. La app abre en **Guía**, con una actividad cada vez. **Empezar o repetir** reproduce la explicación y el recorrido. La voz es opcional.
 3. Explora, pide una pista o usa **Me perdí** para escuchar centro y esquinas. **Lo encontré** guarda tu impresión; no exige acertar ni avanzar.
 4. **Continuar** cambia de actividad. **Elegir una actividad** permite saltar libremente. La actividad y variante se guardan.
@@ -88,3 +88,9 @@ Nueva actividad nativa StudioActivity con grabación de trazos, fondo, capas y s
 ## Exploración inteligente
 
 Android 0.9 añade dos variantes locales de SSD-MobileNet y conexiones explícitas a Gemini y API compatible, con regiones ampliables e interpretaciones separadas de los contornos. Consulta docs/IMAGEN-INTELIGENTE.md. El permiso de Internet sólo se usa en este modo opcional al pulsar Enviar; el reconocimiento local no envía fotos.
+
+## Corrección de instalación 0.9.1
+
+El normalizador de rutas del APK comprimía resources.arsc. Android con destino API 30 o superior exige almacenarlo sin compresión y alineado a 4 bytes; esto provocaba el error de instalación -124. La compilación conserva ese recurso sin compresión y comprueba la alineación. Verify-Packages comprueba también el método ZIP del recurso.
+
+Instalación por ADB y apertura correctas en Samsung SM-A065M con Android 16 (16 de octubre de 2026). Esta prueba no valida todavía la cámara, reconocimiento local ni interacción con TalkBack. En el otro teléfono, Xiaomi con Android 13, la política de instalación USB impidió llegar a comprobar el APK; INSTALL_FAILED_USER_RESTRICTED requiere permitir la instalación en el teléfono.

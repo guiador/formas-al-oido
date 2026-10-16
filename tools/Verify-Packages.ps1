@@ -14,7 +14,29 @@ foreach($arch in @('x86','x64')){
  try{if($zip.Entries.FullName -match '^vision/vision/'){throw 'Directorio de modelos duplicado'};foreach($model in @('model.onnx','model-standard.onnx')){Check-Model $zip 'vision/' $model};if(-not $zip.GetEntry('vision/licenses/ONNX-MODELS-LICENSE.txt')){throw 'Falta licencia de modelos'}}finally{$zip.Dispose()}
  Write-Output "PASS Windows ${arch}: modelos y licencias presentes."
 }
-$apk=[IO.Compression.ZipFile]::OpenRead((Join-Path $final 'Android/Formas-al-oido-0.9.0.apk'))
+$apkPath=Join-Path $final 'Android/Formas-al-oido-0.9.1.apk'
+# Read the ZIP central directory: Android 11+ rejects compressed resources.arsc.
+$reader=[IO.BinaryReader]::new([IO.File]::OpenRead($apkPath))
+try{
+ $stream=$reader.BaseStream
+ $stream.Seek(-22,[IO.SeekOrigin]::End) | Out-Null
+ if($reader.ReadUInt32() -ne 0x06054b50){throw 'EOCD ZIP no reconocido'}
+ $stream.Position+=6;$count=$reader.ReadUInt16();$stream.Position+=4;$central=$reader.ReadUInt32()
+ $stream.Position=$central;$foundResources=$false
+ for($i=0;$i -lt $count;$i++){
+  if($reader.ReadUInt32() -ne 0x02014b50){throw 'Directorio ZIP no válido'}
+  $stream.Position+=6;$method=$reader.ReadUInt16();$stream.Position+=16
+  $nameLength=$reader.ReadUInt16();$extraLength=$reader.ReadUInt16();$commentLength=$reader.ReadUInt16();$stream.Position+=12
+  $name=[Text.Encoding]::UTF8.GetString($reader.ReadBytes($nameLength))
+  if($name -eq 'resources.arsc'){if($method -ne 0){throw 'resources.arsc debe estar sin compresión'};$foundResources=$true}
+  $stream.Position+=$extraLength+$commentLength
+ }
+ if(-not $foundResources){throw 'Falta resources.arsc'}
+}finally{$reader.Dispose()}
+& (Join-Path $env:USERPROFILE '.codex/build-tools/evvdroid/sdk/build-tools/35.0.0/zipalign.exe') -c 4 $apkPath
+if($LASTEXITCODE -ne 0){throw 'El APK no cumple la alineación de 4 bytes'}
+Write-Output 'PASS Android: resources.arsc sin compresión y APK alineado.'
+$apk=[IO.Compression.ZipFile]::OpenRead($apkPath)
 try{if($apk.Entries | Where-Object {$_.FullName.Contains([char]92)}){throw 'El APK contiene rutas con separadores Windows'};foreach($abi in @('armeabi-v7a','arm64-v8a','x86','x86_64')){foreach($lib in @('libonnxruntime.so','libonnxruntime4j_jni.so')){if(-not $apk.GetEntry("lib/$abi/$lib")){throw "Falta biblioteca: $abi/$lib"}}};foreach($model in @('model.onnx','model-standard.onnx')){Check-Model $apk 'assets/vision/' $model};if(-not $apk.GetEntry('assets/vision/labels.tsv')){throw 'Faltan etiquetas accesibles'}}finally{$apk.Dispose()}
 Write-Output 'PASS Android: rutas de assets portables, dos modelos íntegros y cuatro ABI.'
 foreach($line in Get-Content -LiteralPath (Join-Path $final 'SHA256SUMS.txt')){$parts=$line -split '  ',2;if($parts.Length -ne 2 -or (Get-FileHash -LiteralPath (Join-Path $final $parts[1]) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $parts[0]){throw 'Manifiesto SHA256 no coincide'}}
