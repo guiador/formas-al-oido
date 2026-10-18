@@ -1,0 +1,43 @@
+name: OpenAL Android
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        abi: [armeabi-v7a, arm64-v8a, x86, x86_64]
+    steps:
+      - name: Prepare upstream source
+        shell: bash
+        run: |
+          curl -fL https://github.com/kcat/openal-soft/archive/refs/tags/1.25.2.zip -o source.zip
+          echo '47e22c066dffa2f65a1747272978344db845dcef9c7ee118449ec560a44adc8f  source.zip' | sha256sum -c -
+          unzip -q source.zip
+          sdkmanager 'ndk;28.2.13676358' > /dev/null
+      - name: Build shared library
+        shell: bash
+        env:
+          ABI: ${{ matrix.abi }}
+        run: |
+          NDK="$ANDROID_HOME/ndk/28.2.13676358"
+          cmake -S openal-soft-1.25.2 -B build -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE="$NDK/build/cmake/android.toolchain.cmake" \
+            -DANDROID_ABI="$ABI" -DANDROID_PLATFORM=android-26 -DANDROID_STL=c++_shared \
+            -DCMAKE_BUILD_TYPE=Release -DALSOFT_UTILS=OFF -DALSOFT_EXAMPLES=OFF \
+            -DALSOFT_INSTALL=OFF -DALSOFT_BACKEND_OPENSL=ON -DALSOFT_REQUIRE_OPENSL=ON \
+            -DALSOFT_BACKEND_OBOE=OFF -DALSOFT_BACKEND_WAVE=OFF -DALSOFT_ENABLE_MODULES=OFF \
+            -DALSOFT_UPDATE_BUILD_VERSION=OFF -DALSOFT_EMBED_HRTF_DATA=ON -DLIBTYPE=SHARED
+          cmake --build build --target OpenAL -j 2
+          mkdir -p output
+          cp build/libopenal.so output/
+          "$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" --strip-unneeded output/libopenal.so
+          (cd output && sha256sum libopenal.so > SHA256SUMS.txt)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: openal-${{ matrix.abi }}
+          path: output/*
+          retention-days: 14

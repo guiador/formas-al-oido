@@ -1,7 +1,7 @@
-FORMAS AL OÍDO · WINDOWS 0.4
+FORMAS AL OÍDO · WINDOWS 0.5
 
 Descomprime toda la carpeta. Abre Formas-al-oido.exe y conserva runtime,
-formas-engine.jar, kemar.bin, las bibliotecas DLL y vision junto al ejecutable.
+formas-engine.jar, jna.jar, kemar.bin, las bibliotecas DLL, openal y vision junto al ejecutable.
 No necesitas instalar Java.
 Windows 10 u 11, con .NET Framework 4.8. Elige x64 para Windows de 64 bits
 o x86 para Windows de 32 bits. El paquete x86 también funciona en Windows x64.
@@ -87,3 +87,9 @@ Enviar. No hay claves incluidas y las claves introducidas no se guardan.
 ONNX Runtime puede requerir Microsoft Visual C++ Runtime de esta arquitectura.
 Licencias en vision/licenses. Guía completa y límites:
 https://github.com/guiador/formas-al-oido/blob/main/docs/IMAGEN-INTELIGENTE.md
+
+OPENAL SOFT HRTF
+En Sonido y mando > Motor espacial puedes elegir OpenAL Soft HRTF.
+Recomendado con audífonos. Los otros modos siguen disponibles. Si OpenAL no
+puede inicializarse se anuncia y se utiliza KEMAR. Conserva jna.jar, soft_oal.dll
+y la carpeta openal, que incluye las licencias y el código fuente de OpenAL.

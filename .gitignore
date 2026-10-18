@@ -34,3 +34,5 @@ studio-session*.json
 /tools/ai-cache/
 /core/assets/vision/*.onnx
 /core/assets/vision/*.download
+/tools/audio-cache/
+/core/assets/openal/

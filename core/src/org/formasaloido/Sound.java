@@ -49,6 +49,7 @@ public final class Sound {
   public static Program guide(Settings s){Program p=new Program(s);for(Geometry.Point q:Arrays.asList(new Geometry.Point(70,225),new Geometry.Point(530,225),new Geometry.Point(300,65),new Geometry.Point(300,385)))p.pulse(q,0,.4,"vertex").silence(.4);return p.path(Arrays.asList(new Geometry.Point(100,350),new Geometry.Point(500,90)),false,false);}
  }
  public static final class Renderer {
+  public double azimuth=0,elevation=0;
   final HRIR hrir;final float[] history=new float[TAPS],left=new float[TAPS],right=new float[TAPS],targetL=new float[TAPS],targetR=new float[TAPS];int cursor=0,sampleCounter=0,spanIndex=0;double phase=0,amplitude=0,pan=0,monoPosition=0,tremoloPhase=0;long noise=7;
   Program program;long frame=0,touchAge=0;Geometry.Point touch;boolean touchActive=false;String touchKind="line";
   public Renderer(HRIR h){hrir=h;}
@@ -99,8 +100,8 @@ public final class Sound {
    tremoloPhase+=2*Math.PI*(4+code*2)/RATE;if(tremoloPhase>2*Math.PI)tremoloPhase-=2*Math.PI;
    // Preserve short corner/start/end cues; modulate only sustained material.
    if(code!=0&&(kind.equals("line")||kind.equals("raster")||kind.equals("region")))mono*=1-.28*Math.abs(code)+.28*Math.abs(code)*Math.cos(tremoloPhase);
-   if(sampleCounter++%64==0){double az=(x/300-1)*s.width,el=(.5-y/450)*2*s.elevation;if(hrir!=null&&s.spatial==1)hrir.filter(az,el,targetL,targetR);pan=Math.max(-1,Math.min(1,az/90));}
-   double l=0,r=0;if(s.spatial==1&&hrir!=null){history[cursor]=(float)mono;int at=cursor;for(int k=0;k<TAPS;k++){left[k]+=(targetL[k]-left[k])*.002;right[k]+=(targetR[k]-right[k])*.002;l+=history[at]*left[k];r+=history[at]*right[k];at=(at-1)&(TAPS-1);}cursor=(cursor+1)&(TAPS-1);}else if(s.spatial==2){l=r=mono*Math.sqrt(.5);}else{l=mono*Math.sqrt((1-pan)*.5);r=mono*Math.sqrt((1+pan)*.5);}
+   if(sampleCounter++%64==0){double az=(x/300-1)*s.width,el=(.5-y/450)*2*s.elevation;azimuth=s.swap?-az:az;elevation=el;if(hrir!=null&&s.spatial==1)hrir.filter(az,el,targetL,targetR);pan=Math.max(-1,Math.min(1,az/90));}
+   double l=0,r=0;if(s.spatial==1&&hrir!=null){history[cursor]=(float)mono;int at=cursor;for(int k=0;k<TAPS;k++){left[k]+=(targetL[k]-left[k])*.002;right[k]+=(targetR[k]-right[k])*.002;l+=history[at]*left[k];r+=history[at]*right[k];at=(at-1)&(TAPS-1);}cursor=(cursor+1)&(TAPS-1);}else if(s.spatial==3){l=r=mono;}else if(s.spatial==2){l=r=mono*Math.sqrt(.5);}else{l=mono*Math.sqrt((1-pan)*.5);r=mono*Math.sqrt((1+pan)*.5);}
    double gain=s.volume*2;if(s.swap){double a=l;l=r;r=a;}out[2*i]=(short)(Math.tanh(l*gain)*28000);out[2*i+1]=(short)(Math.tanh(r*gain)*28000);
   }}
   private boolean joins(Span a,Span b){return a.kind.equals("line")&&b.kind.equals("line")&&Math.abs(a.start+a.duration-b.start)<.00001;}

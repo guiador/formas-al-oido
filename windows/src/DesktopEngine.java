@@ -20,19 +20,26 @@ public final class DesktopEngine {
  int surface=0;double tolerance=18;boolean air=true;
  String lastFeedback="";
  SourceDataLine output;
- DesktopEngine(String data)throws Exception{try(InputStream in=new FileInputStream(data)){renderer=new Sound.Renderer(new Sound.HRIR(in));}}
+ DesktopEngine(String data)throws Exception{openalLibrary=new File(new File(data).getAbsoluteFile().getParentFile(),"soft_oal.dll").getPath();try(InputStream in=new FileInputStream(data)){renderer=new Sound.Renderer(new Sound.HRIR(in));}}
  static String text(String s){return Base64.getEncoder().encodeToString(s.getBytes(java.nio.charset.StandardCharsets.UTF_8));}
  static void send(String s){System.out.println(s);System.out.flush();}
- void startAudio(){Thread t=new Thread(()->{try{
-  AudioFormat format=new AudioFormat(Sound.RATE,16,2,true,false);
-  output=AudioSystem.getSourceDataLine(format);output.open(format,4096);output.start();
-  short[] pcm=new short[512];byte[] bytes=new byte[1024];
-  while(running){boolean active;synchronized(gate){active=touching||(!renderer.paused()&&System.nanoTime()<audibleUntil);if(active)renderer.render(pcm,256,settings);}
-   if(!active){Thread.sleep(15);continue;}
-   for(int i=0;i<pcm.length;i++){bytes[i*2]=(byte)pcm[i];bytes[i*2+1]=(byte)(pcm[i]>>8);}output.write(bytes,0,bytes.length);
+ volatile boolean flushRequested=false;
+ final String openalLibrary;
+ void startAudio(){Thread t=new Thread(()->{OpenALOutput openal=null;boolean failed=false;try{
+  short[] pcm=new short[512];byte[] bytes=new byte[1024];int previous=-1;
+  while(running){Sound.Settings effective;boolean active,flush;
+   synchronized(gate){effective=settings.copy();active=touching||(!renderer.paused()&&System.nanoTime()<audibleUntil);flush=flushRequested;flushRequested=false;}
+   if(effective.spatial==3&&!failed&&openal==null){try{openal=new OpenALOutput(openalLibrary);send("STATUS|"+text("OpenAL Soft HRTF: "+openal.hrtf));if(output!=null){output.stop();output.close();output=null;}}catch(Exception|LinkageError ex){failed=true;send("AUDIOERROR|"+text("OpenAL no disponible. Se usa HRTF KEMAR."));}}
+   if(effective.spatial!=3&&openal!=null){openal.close();openal=null;}
+   if(effective.spatial==3&&openal==null)effective.spatial=1;
+   if(openal==null&&output==null){AudioFormat format=new AudioFormat(Sound.RATE,16,2,true,false);output=AudioSystem.getSourceDataLine(format);output.open(format,4096);output.start();}
+   if(flush||previous!=effective.spatial){if(openal!=null)openal.flush();else output.flush();}previous=effective.spatial;
+   if(!active){Thread.sleep(10);continue;}
+   double az,el;synchronized(gate){renderer.render(pcm,256,effective);az=renderer.azimuth;el=renderer.elevation;}
+   if(openal!=null){openal.write(pcm,az,el);}else{for(int i=0;i<pcm.length;i++){bytes[i*2]=(byte)pcm[i];bytes[i*2+1]=(byte)(pcm[i]>>8);}output.write(bytes,0,bytes.length);}
   }
- }catch(Exception ex){send("AUDIOERROR|"+text("No se pudo abrir la salida de audio. Revisa el dispositivo predeterminado y vuelve a abrir la aplicación."));}finally{if(output!=null){output.stop();output.close();}}},"audio-local");t.setDaemon(true);t.start();}
- void stop(){touching=false;renderer.quiet();audibleUntil=System.nanoTime()+100000000L;if(output!=null)output.flush();}
+ }catch(Exception ex){send("AUDIOERROR|"+text("No se pudo abrir o mantener la salida de audio. Revisa el dispositivo predeterminado y vuelve a abrir la aplicación."));}finally{if(openal!=null)openal.close();if(output!=null){output.stop();output.close();}}},"audio-local");t.setDaemon(true);t.start();}
+ void stop(){touching=false;renderer.quiet();audibleUntil=System.nanoTime()+100000000L;flushRequested=true;}
  void play(Sound.Program p){stop();renderer.program(p);audibleUntil=System.nanoTime()+(long)((p.duration+.2)*1e9);}
  void scene(String description){map.reset();lastFeedback="";StringBuilder b=new StringBuilder("SCENE|").append(text(description)).append('|');
   for(Geometry.Shape s:geometry.shapes){b.append(s.closed?'1':'0').append(',').append(s.hole?'1':'0').append(':');for(Geometry.Point p:s.points)b.append(p.x).append(',').append(p.y).append(';');b.append('/');}send(b.toString());}
@@ -47,9 +54,9 @@ public final class DesktopEngine {
   case "VISION_API":{if(sourceImage==null)throw new IllegalArgumentException("Falta imagen");stop();final long request=++visionEpoch;final BufferedImage snapshot=sourceImage;final String provider=a[1],url=new String(Base64.getDecoder().decode(a[2]),java.nio.charset.StandardCharsets.UTF_8),model=new String(Base64.getDecoder().decode(a[3]),java.nio.charset.StandardCharsets.UTF_8),key=new String(Base64.getDecoder().decode(a[4]),java.nio.charset.StandardCharsets.UTF_8);Thread job=new Thread(()->{try{ByteArrayOutputStream out=new ByteArrayOutputStream();ImageIO.write(snapshot,"png",out);ImageScene response=VisionApi.analyze(out.toByteArray(),provider,url,model,key);synchronized(gate){if(request==visionEpoch&&sourceImage==snapshot)vision(response);}}catch(Exception error){synchronized(gate){if(request==visionEpoch)send("VISIONERROR|"+text("No se pudo consultar la API. Revisa dirección, clave, modelo y conexión. Los contornos siguen disponibles."));}}},"vision-api");job.setDaemon(true);job.start();break;}
   case "IMAGE_FOCUS":{stop();int n=Integer.parseInt(a[1]);if(imageExtraction==null||n<0||n>=imageScene.regions.size())throw new IllegalArgumentException("Región inexistente");ImageScene.Region r=imageScene.regions.get(n);geometry=ImageScene.focus(imageExtraction.geometry,r,imageExtraction.left,imageExtraction.top,imageExtraction.width*imageExtraction.scale,imageExtraction.height*imageExtraction.scale);int l=(int)(r.left*sourceImage.getWidth()),t=(int)(r.top*sourceImage.getHeight()),w=Math.max(1,(int)Math.ceil(r.right*sourceImage.getWidth())-l),h=Math.max(1,(int)Math.ceil(r.bottom*sourceImage.getHeight())-t);BufferedImage crop=sourceImage.getSubimage(l,t,Math.min(w,sourceImage.getWidth()-l),Math.min(h,sourceImage.getHeight()-t));raster=new ImageScan.Raster(crop.getRGB(0,0,crop.getWidth(),crop.getHeight(),null,0,crop.getWidth()),crop.getWidth(),crop.getHeight());layer=0;scene("Primer plano del componente "+(n+1)+". Las posiciones son ahora locales a esta región. Su caja no es la silueta del objeto.");break;}
   case "VISION_CORRECT":{visionEpoch++;int n=Integer.parseInt(a[1]);ImageScene.Region r=imageScene.regions.get(n);r.label=ImageScene.clean(new String(Base64.getDecoder().decode(a[2]),java.nio.charset.StandardCharsets.UTF_8),160);r.analogy=ImageScene.clean(new String(Base64.getDecoder().decode(a[3]),java.nio.charset.StandardCharsets.UTF_8),240);r.source="Anotación del usuario";send("VISION|"+text(imageScene.json()));break;} case "IMAGE_RESTORE":if(imageExtraction!=null){stop();geometry=imageExtraction.geometry;raster=new ImageScan.Raster(sourceImage.getRGB(0,0,sourceImage.getWidth(),sourceImage.getHeight(),null,0,sourceImage.getWidth()),sourceImage.getWidth(),sourceImage.getHeight());scene("Vista general restaurada; la imagen conserva su ubicación original.");}break;
-  case "CONTROL":{String message=renderer.control(a[1]);touching=false;if(output!=null)output.flush();audibleUntil=renderer.paused()?0:System.nanoTime()+(long)((renderer.remaining()+.2)*1e9);send((a[1].equals("resume")||a[1].equals("fragment")?"STATUS|":"ORIENTATION|")+text(message));break;}
-  case "OVERVIEW":renderer.control("pause");touching=false;audibleUntil=0;if(output!=null)output.flush();send("ORIENTATION|"+text((layer==0?"Fondo: ":layer==2?"Fondo y trazos: ":"Trazos aportados: ")+Orientation.overview(activeGeometry())));break;
-  case "WHERE":renderer.control("pause");touching=false;audibleUntil=0;if(output!=null)output.flush();send("ORIENTATION|"+text(Orientation.at(activeGeometry(),new Geometry.Point(Double.parseDouble(a[1]),Double.parseDouble(a[2])))));break;
+  case "CONTROL":{String message=renderer.control(a[1]);touching=false;flushRequested=true;audibleUntil=renderer.paused()?0:System.nanoTime()+(long)((renderer.remaining()+.2)*1e9);send((a[1].equals("resume")||a[1].equals("fragment")?"STATUS|":"ORIENTATION|")+text(message));break;}
+  case "OVERVIEW":renderer.control("pause");touching=false;audibleUntil=0;flushRequested=true;send("ORIENTATION|"+text((layer==0?"Fondo: ":layer==2?"Fondo y trazos: ":"Trazos aportados: ")+Orientation.overview(activeGeometry())));break;
+  case "WHERE":renderer.control("pause");touching=false;audibleUntil=0;flushRequested=true;send("ORIENTATION|"+text(Orientation.at(activeGeometry(),new Geometry.Point(Double.parseDouble(a[1]),Double.parseDouble(a[2])))));break;
   case "TOUCH":{if(heightMode&&raster!=null){Geometry.Point q=new Geometry.Point(Double.parseDouble(a[1]),Double.parseDouble(a[2]));if(!raster.contains(q))stop();else{renderer.touch(new Geometry.Point(q.x,q.y,4*(1-raster.value(q,scanCenter,scanWindow,scanInvert))),"line");touching=true;}break;}TouchMap.Feedback f=map.sample(activeGeometry(),new Geometry.Point(Double.parseDouble(a[1]),Double.parseDouble(a[2])),surface,0,tolerance,air);if(f.kind.equals("silent")){stop();}else{renderer.touch(f.position,f.kind);touching=true;}String next=f.kind+"|"+f.component;if(!next.equals(lastFeedback)){send("FEEDBACK|"+next);lastFeedback=next;}break;}
   case "HOLD":touching=false;audibleUntil=System.nanoTime()+220000000L;break;
   case "CONTOUR":play(Sound.Program.contour(activeGeometry(),settings));break;

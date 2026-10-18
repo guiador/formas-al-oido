@@ -20,4 +20,10 @@ Los JSON en `windows/tools/` y build-info.json de cada paquete identifican binar
 Proyecto y compilaciones: https://adoptium.net/ y https://github.com/adoptium/temurin8-binaries
 # Reconocimiento de imágenes
 
+## OpenAL Soft y JNA
+
+OpenAL Soft 1.25.2, copyright de sus autores, bajo LGPL (véanse sus archivos COPYING y avisos originales). Se enlaza dinámicamente, sin modificaciones. El código fuente original completo se entrega en openal/openal-source.zip en Windows y assets/openal/openal-source.zip en Android, junto con los avisos de OpenAL, pffft, fmt y GSL. Fuente: https://github.com/kcat/openal-soft/tree/1.25.2
+
+JNA 5.17.0 se utiliza bajo la alternativa Apache-2.0 de su licencia dual Apache-2.0/LGPL-2.1-or-later; incluye los avisos JNA-LICENSE, JNA-APACHE-2.0, JNA-LGPL-2.1 y libffi-LICENSE. Fuente: https://github.com/java-native-access/jna/tree/5.17.0 . La integración propia de Formas al oído no copia el código GPL de Wicked Quest.
+
 La entrega Android 0.9 / Windows 0.4 incorpora ONNX Runtime 1.16.3 (MIT), paquetes auxiliares Microsoft/.NET (MIT) y SSD-MobileNetV1 opset 12 de ONNX Model Zoo en variantes int8/float32. Se incluyen las licencias, avisos de terceros, ficha del modelo y nota de procedencia en `core/assets/vision/`. La ficha específica declara MIT y se conserva también la licencia Apache-2.0 del repositorio de modelos. Los servicios Gemini y APIs compatibles se configuran por el usuario; no se redistribuyen sus modelos remotos.

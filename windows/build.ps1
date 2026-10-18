@@ -1,5 +1,6 @@
 param([string]$Jdk='')
 $ErrorActionPreference='Stop'
+& (Join-Path (Split-Path -Parent $PSScriptRoot) 'tools/Prepare-OpenAL.ps1')
 & (Join-Path (Split-Path -Parent $PSScriptRoot) 'tools/Prepare-Vision.ps1')
 $workspace=Split-Path -Parent $MyInvocation.MyCommand.Path
 $root=Split-Path -Parent $workspace
@@ -9,8 +10,8 @@ $csc=Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
 $speech=Get-ChildItem -LiteralPath (Join-Path $env:WINDIR 'Microsoft.NET/assembly/GAC_MSIL/System.Speech') -Filter System.Speech.dll -Recurse | Select-Object -First 1 -ExpandProperty FullName
 $classes=Join-Path $workspace 'build/classes'
 Reset-GeneratedDirectory $classes (Join-Path $workspace 'build')
-$sources=@(Get-ChildItem -LiteralPath (Join-Path $root 'core/src') -Recurse -Filter '*.java' | ForEach-Object FullName)
-& "$Jdk/bin/javac.exe" --release 8 -encoding UTF-8 -d $classes @sources "$workspace/src/DesktopEngine.java"
+$sources=@(Get-ChildItem -LiteralPath (Join-Path $root 'core/src'),(Join-Path $root 'audio/src') -Recurse -Filter '*.java' | ForEach-Object FullName)
+& "$Jdk/bin/javac.exe" --release 8 -encoding UTF-8 -cp "$root/tools/audio-cache/jna.jar" -d $classes @sources "$workspace/src/DesktopEngine.java"
 if($LASTEXITCODE -ne 0){throw 'No se pudo compilar el motor'}
 & "$Jdk/bin/jar.exe" --create --file "$workspace/build/formas-engine.jar" -C $classes .
 if($LASTEXITCODE -ne 0){throw 'No se pudo empaquetar el motor'}
@@ -36,7 +37,10 @@ foreach($architecture in @('x32','x64')){
   Remove-GeneratedPath "$output/runtime" (Join-Path $workspace 'build')
   Copy-Item -LiteralPath $runtime.FullName -Destination "$output/runtime" -Recurse -Force
  }
- $provenance=[ordered]@{architecture=$platform;runtime_version=$asset.version.semver;runtime_url=$asset.binary.package.link;runtime_sha256=$asset.binary.package.checksum;app_version='0.4.0';engine_audio_version='0.9.0'}
+ Copy-Item -LiteralPath "$root/tools/audio-cache/jna.jar","$root/tools/audio-cache/$platform/soft_oal.dll" -Destination $output -Force
+ Reset-GeneratedDirectory "$output/openal" $output
+ Copy-Item -Path "$root/core/assets/openal/*" -Destination "$output/openal" -Force
+ $provenance=[ordered]@{architecture=$platform;runtime_version=$asset.version.semver;runtime_url=$asset.binary.package.link;runtime_sha256=$asset.binary.package.checksum;app_version='0.5.0';engine_audio_version='0.10.0'}
  $provenance | ConvertTo-Json | Set-Content -LiteralPath "$output/build-info.json" -Encoding UTF8
  Copy-Item -Path "$root/tools/ai-cache/managed/*.dll","$root/tools/ai-cache/$platform/*.dll" -Destination $output -Force; Reset-GeneratedDirectory "$output/vision" $output; Copy-Item -Path "$root/core/assets/vision/*" -Destination "$output/vision" -Recurse -Force; Write-Output "EXE: $output/Formas-al-oido.exe"
 }

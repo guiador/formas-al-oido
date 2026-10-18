@@ -1,5 +1,6 @@
 param([string]$AndroidSdk='', [string]$Jdk='')
 $ErrorActionPreference='Stop'
+& (Join-Path (Split-Path -Parent $PSScriptRoot) 'tools/Prepare-OpenAL.ps1') -Android
 & (Join-Path (Split-Path -Parent $PSScriptRoot) 'tools/Prepare-Vision.ps1')
 $workspace=Split-Path -Parent $MyInvocation.MyCommand.Path
 if(-not $AndroidSdk){$AndroidSdk=Join-Path $env:USERPROFILE '.codex\build-tools\evvdroid\sdk'}
@@ -16,10 +17,10 @@ $dex=Join-Path $output 'dex'
 New-Item -ItemType Directory -Force -Path $output,$classes,$dex,(Join-Path $workspace 'private') | Out-Null
 Reset-GeneratedDirectory $classes $output
 Reset-GeneratedDirectory $dex $output
-$sources=@(Get-ChildItem -LiteralPath (Join-Path $workspace 'src'),(Join-Path $core 'src') -Recurse -Filter '*.java' | ForEach-Object FullName)
-Run "$Jdk\bin\javac.exe" (@('--release','8','-encoding','UTF-8','-classpath',($androidJar+';'+(Join-Path $core '../tools/ai-cache/android/classes.jar')),'-d',$classes)+$sources)
+$sources=@(Get-ChildItem -LiteralPath (Join-Path $workspace 'src'),(Join-Path $core 'src'),(Join-Path $core '../audio/src') -Recurse -Filter '*.java' | ForEach-Object FullName)
+Run "$Jdk\bin\javac.exe" (@('--release','8','-encoding','UTF-8','-classpath',($androidJar+';'+(Join-Path $core '../tools/ai-cache/android/classes.jar')+';'+(Join-Path $core '../tools/audio-cache/jna-android.jar')),'-d',$classes)+$sources)
 Run "$Jdk\bin\jar.exe" @('--create','--file',"$output\classes.jar",'-C',$classes,'.')
-Run "$Jdk\bin\java.exe" @('-cp',"$tools\lib\d8.jar",'com.android.tools.r8.D8','--lib',$androidJar,'--min-api','26','--output',$dex,"$output\classes.jar",(Join-Path $core "../tools/ai-cache/android/classes.jar"))
+Run "$Jdk\bin\java.exe" @('-cp',"$tools\lib\d8.jar",'com.android.tools.r8.D8','--lib',$androidJar,'--min-api','26','--output',$dex,"$output\classes.jar",(Join-Path $core "../tools/ai-cache/android/classes.jar"),(Join-Path $core "../tools/audio-cache/jna-android.jar"))
 Run "$tools\aapt2.exe" @('link','-I',$androidJar,'--manifest',"$workspace\AndroidManifest.xml",'-A',"$core/assets",'-o',"$output\unsigned.apk")
 # Windows aapt2 may store nested asset names with backslashes, which AssetManager cannot open.
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -29,13 +30,13 @@ $sourceZip=[IO.Compression.ZipFile]::OpenRead("$output/unsigned.apk")
 $targetZip=[IO.Compression.ZipFile]::Open($normalized,[IO.Compression.ZipArchiveMode]::Create)
 try{foreach($entry in $sourceZip.Entries){$name=$entry.FullName.Replace([char]92,[char]47);$compression=if($name -eq 'resources.arsc'){[IO.Compression.CompressionLevel]::NoCompression}else{[IO.Compression.CompressionLevel]::Optimal};$copy=$targetZip.CreateEntry($name,$compression);$inputStream=$entry.Open();$outputStream=$copy.Open();try{$inputStream.CopyTo($outputStream)}finally{$inputStream.Dispose();$outputStream.Dispose()}}}finally{$sourceZip.Dispose();$targetZip.Dispose()}
 Move-Item -LiteralPath $normalized -Destination "$output/unsigned.apk" -Force
-Run "$Jdk\bin\jar.exe" @('--update','--file',"$output\unsigned.apk",'-C',$dex,'classes.dex','-C',(Join-Path $core '../tools/ai-cache/android'),'lib')
+Run "$Jdk\bin\jar.exe" @('--update','--file',"$output\unsigned.apk",'-C',$dex,'classes.dex','-C',(Join-Path $core '../tools/ai-cache/android'),'lib','-C',(Join-Path $core '../tools/audio-cache/android'),'lib')
 Run "$tools\zipalign.exe" @('-f','4',"$output\unsigned.apk","$output\aligned.apk")
 $keystore=Join-Path $workspace 'private\formas-pruebas.jks'
 if(-not(Test-Path -LiteralPath $keystore)){Run "$Jdk\bin\keytool.exe" @('-genkeypair','-keystore',$keystore,'-storepass','android','-keypass','android','-alias','formas-pruebas','-keyalg','RSA','-keysize','3072','-validity','10000','-dname','CN=Formas al oido Prototype, O=Local development, C=PE')}
 $final=Join-Path (Split-Path -Parent $workspace) 'Formas al oído/Android'
 New-Item -ItemType Directory -Force -Path $final | Out-Null
-$apk=Join-Path $final 'Formas-al-oido-0.9.1.apk'
+$apk=Join-Path $final 'Formas-al-oido-0.10.0.apk'
 Run "$Jdk\bin\java.exe" @('-jar',"$tools\lib\apksigner.jar",'sign','--v4-signing-enabled','false','--ks',$keystore,'--ks-key-alias','formas-pruebas','--ks-pass','pass:android','--key-pass','pass:android','--out',$apk,"$output\aligned.apk")
 Run "$Jdk\bin\java.exe" @('-jar',"$tools\lib\apksigner.jar",'verify','--verbose',$apk)
 Run "$tools\zipalign.exe" @('-c','4',$apk)
