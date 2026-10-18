@@ -5,7 +5,7 @@ permissions:
   contents: read
 jobs:
   native:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -17,7 +17,7 @@ jobs:
           curl -fL https://github.com/kcat/openal-soft/archive/refs/tags/1.25.2.zip -o source.zip
           echo '47e22c066dffa2f65a1747272978344db845dcef9c7ee118449ec560a44adc8f  source.zip' | sha256sum -c -
           unzip -q source.zip
-          sdkmanager 'ndk;28.2.13676358' > /dev/null
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'ndk;28.2.13676358' > /dev/null
       - name: Build shared library
         shell: bash
         env:
