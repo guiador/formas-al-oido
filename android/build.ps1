@@ -1,6 +1,6 @@
-param([string]$AndroidSdk='', [string]$Jdk='')
+param([string]$AndroidSdk='', [string]$Jdk='', [string]$Ndk='', [string]$Cmake='')
 $ErrorActionPreference='Stop'
-& (Join-Path (Split-Path -Parent $PSScriptRoot) 'tools/Prepare-OpenAL.ps1') -Android
+& (Join-Path (Split-Path -Parent $PSScriptRoot) 'tools/Prepare-OpenAL.ps1') -Android -Ndk $Ndk -Cmake $Cmake
 & (Join-Path (Split-Path -Parent $PSScriptRoot) 'tools/Prepare-Vision.ps1')
 $workspace=Split-Path -Parent $MyInvocation.MyCommand.Path
 if(-not $AndroidSdk){$AndroidSdk=Join-Path $env:USERPROFILE '.codex\build-tools\evvdroid\sdk'}
