@@ -19,7 +19,7 @@ public final class DesktopEngine {
  long audibleUntil=0;boolean touching=false;
  int surface=0;double tolerance=18;boolean air=true;
  String lastFeedback="";
- SourceDataLine output;
+ SourceDataLine output;Thread audioThread;
  DesktopEngine(String data)throws Exception{openalLibrary=new File(new File(data).getAbsoluteFile().getParentFile(),"soft_oal.dll").getPath();try(InputStream in=new FileInputStream(data)){renderer=new Sound.Renderer(new Sound.HRIR(in));}}
  static String text(String s){return Base64.getEncoder().encodeToString(s.getBytes(java.nio.charset.StandardCharsets.UTF_8));}
  static void send(String s){System.out.println(s);System.out.flush();}
@@ -32,13 +32,13 @@ public final class DesktopEngine {
    if(effective.spatial==3&&!failed&&openal==null){try{openal=new OpenALOutput(openalLibrary);send("STATUS|"+text("OpenAL Soft HRTF: "+openal.hrtf));if(output!=null){output.stop();output.close();output=null;}}catch(Exception|LinkageError ex){failed=true;send("AUDIOERROR|"+text("OpenAL no disponible. Se usa HRTF KEMAR."));}}
    if(effective.spatial!=3&&openal!=null){openal.close();openal=null;}
    if(effective.spatial==3&&openal==null)effective.spatial=1;
-   if(openal==null&&output==null){AudioFormat format=new AudioFormat(Sound.RATE,16,2,true,false);output=AudioSystem.getSourceDataLine(format);output.open(format,4096);output.start();}
-   if(flush||previous!=effective.spatial){if(openal!=null)openal.flush();else output.flush();}previous=effective.spatial;
+   if(flush||previous!=effective.spatial){if(openal!=null)openal.flush();else if(output!=null)output.flush();}previous=effective.spatial;
    if(!active){Thread.sleep(10);continue;}
+   if(openal==null&&output==null){AudioFormat format=new AudioFormat(Sound.RATE,16,2,true,false);output=AudioSystem.getSourceDataLine(format);output.open(format,4096);output.start();}
    double az,el;synchronized(gate){renderer.render(pcm,256,effective);az=renderer.azimuth;el=renderer.elevation;}
    if(openal!=null){openal.write(pcm,az,el);}else{for(int i=0;i<pcm.length;i++){bytes[i*2]=(byte)pcm[i];bytes[i*2+1]=(byte)(pcm[i]>>8);}output.write(bytes,0,bytes.length);}
   }
- }catch(Exception ex){send("AUDIOERROR|"+text("No se pudo abrir o mantener la salida de audio. Revisa el dispositivo predeterminado y vuelve a abrir la aplicación."));}finally{if(openal!=null)openal.close();if(output!=null){output.stop();output.close();}}},"audio-local");t.setDaemon(true);t.start();}
+ }catch(Exception ex){send("AUDIOERROR|"+text("No se pudo abrir o mantener la salida de audio. Revisa el dispositivo predeterminado y vuelve a abrir la aplicación."));}finally{if(openal!=null)openal.close();if(output!=null){output.stop();output.close();}}},"audio-local");t.setDaemon(true);audioThread=t;t.start();}
  void stop(){touching=false;renderer.quiet();audibleUntil=System.nanoTime()+100000000L;flushRequested=true;}
  void play(Sound.Program p){stop();renderer.program(p);audibleUntil=System.nanoTime()+(long)((p.duration+.2)*1e9);}
  void scene(String description){map.reset();lastFeedback="";StringBuilder b=new StringBuilder("SCENE|").append(text(description)).append('|');
@@ -86,6 +86,6 @@ public final class DesktopEngine {
  }}}
  public static void main(String[] args)throws Exception{Locale.setDefault(Locale.ROOT);DesktopEngine engine=new DesktopEngine(args[0]);if(args.length<2||!args[1].equals("--silent"))engine.startAudio();
   for(Curriculum.Lesson l:Curriculum.LESSONS)send("LESSON|"+text(l.title)+"|"+text(l.hint));send("READY");
-  BufferedReader input=new BufferedReader(new InputStreamReader(System.in,java.nio.charset.StandardCharsets.UTF_8));String line;while(engine.running&&(line=input.readLine())!=null)try{engine.command(line);}catch(Exception e){send("ERROR|"+text("No se pudo completar la operación: "+e.getClass().getSimpleName()));}engine.running=false;
+  BufferedReader input=new BufferedReader(new InputStreamReader(System.in,java.nio.charset.StandardCharsets.UTF_8));String line;while(engine.running&&(line=input.readLine())!=null)try{engine.command(line);}catch(Exception e){send("ERROR|"+text("No se pudo completar la operación: "+e.getClass().getSimpleName()));}engine.running=false;if(engine.audioThread!=null)engine.audioThread.join(3000);
  }
 }

@@ -39,6 +39,7 @@ Windows usa controles nativos accesibles por teclado. Android conserva TalkBack.
 | Carpeta | Contenido |
 | --- | --- |
 | `core/` | Geometría, actividades, audio, extracción de imágenes, datos HRTF y pruebas compartidas |
+| `audio/` | Adaptación OpenAL Soft compartida y pruebas del mezclador real |
 | `android/` | Interfaz Java nativa, cámara y adaptación de audio, compilación sin Gradle |
 | `windows/` | Interfaz Windows Forms, puente local al núcleo y paquetes x86/x64 |
 | `web/` | Prototipo HTML/CSS/JavaScript independiente |

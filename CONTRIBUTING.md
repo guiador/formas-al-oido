@@ -15,6 +15,7 @@ No publiques nombres de participantes ni imágenes de otras personas. Revisa el 
 - Conserva teclado, nombres accesibles y salida del lienzo con Tab. No desactives lectores de pantalla.
 - Mantén separadas geometría, significado sonoro y ayudas opcionales. No añadas ruido que cambie las reglas sin explicarlo.
 - Los cambios del núcleo se comparten entre Android y Windows. Ejecuta `core/test.ps1`; para Windows ejecuta además `windows/build.ps1` y `windows/test.ps1`.
+- Para cambios en OpenAL o su adaptación, ejecuta también `audio/test.ps1` después de compilar Windows. Verifica el empaquetado con `tools/Verify-Packages.ps1` después de generar los tres archivos finales. Consulta `docs/OPENAL.md` para las dependencias y la compilación Android en GitHub Actions.
 - La versión web tiene su propia prueba: `node web/test.cjs` desde la raíz.
 - Indica qué dispositivos y lectores se probaron realmente. Las pruebas automáticas no sustituyen la escucha ni las pruebas táctiles.
 - No subas claves de firma, credenciales, entornos descargados, resultados personales ni archivos de compilación al código fuente.
