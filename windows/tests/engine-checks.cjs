@@ -14,7 +14,12 @@ async function run(arch){
  async function until(prefix){for(let i=0;i<100;i++){const line=await next();assert(!line.startsWith('ERROR|'),line);if(line.startsWith(prefix))return line;}throw Error('Response not found '+prefix);}
  function send(s){child.stdin.write(s+'\n');}
  function scene(line){let count=0,holes=0;for(const s of line.split('|')[2].split('/').filter(Boolean)){let [flags,data]=s.split(':');if(flags.split(',')[1]==='1')holes++;for(const point of data.split(';').filter(Boolean)){const [x,y]=point.split(',').map(Number);assert(Number.isFinite(x)&&Number.isFinite(y));assert(x>=0&&x<=600&&y>=0&&y<=450);count++;}}return {count,holes};}
- try{await until('READY');assert.equal(lessonCount,29);for(let lesson=0;lesson<29;lesson++){send('GUIDE|'+lesson+'|0|70');assert(scene(await until('SCENE|')).count>0);}
+ try{await until('READY');assert.equal(lessonCount,29);const mathEncode=s=>Buffer.from(s).toString('base64');
+  for(const [input,expected] of [['1/2+1/3','5/6'],['2x+3=11','x = 4'],['rad: sin(pi/2)','≈ 1']]){send('MATH|'+mathEncode(input)+'|41');const line=await until('MATHDATA|');assert.equal(line.split('|')[2],'41');const data=JSON.parse(Buffer.from(line.split('|')[1],'base64').toString());assert.equal(data.result,expected);send('MATH_LOAD|'+mathEncode(data.project)+'|42');assert.equal((await until('MATHDATA|')).split('|')[2],'42');}
+  send('MATH|'+mathEncode('1/0')+'|43');assert(Buffer.from((await until('MATHERROR|')).split('|')[1],'base64').toString().includes('cero'));send('PING');await until('PONG');
+  for(let n=0;n<8;n++){send('MATH_PLANE|'+n);assert(scene(await until('MATHPLANE|')).count>4);}
+  send('MATH_TRACE|2|999');let point=JSON.parse(Buffer.from((await until('MATHPOINT|')).split('|')[1],'base64').toString());assert.equal(point.count,5);assert.equal(point.index,4);send('MATH_PROJECT|5|0');point=JSON.parse(Buffer.from((await until('MATHPOINT|')).split('|')[1],'base64').toString());assert.equal(point.y,0);
+  send('MATH_LOAD|'+mathEncode(JSON.stringify({schema:'formas-math-plane-v1',plane:2,x:-3,y:-2}))+'|44');const restored=JSON.parse(Buffer.from((await until('MATHRESTORE|')).split('|')[1],'base64').toString());assert.equal(restored.plane,2);assert(restored.description.includes('Esquina'));for(let lesson=0;lesson<29;lesson++){send('GUIDE|'+lesson+'|0|70');assert(scene(await until('SCENE|')).count>0);}
   for(let mode=0;mode<4;mode++){send('SET|1|'+mode+'|0.28|true|0.7|1|0.6|65|35|true|false|0|true|18');send('TOUCH|300|225');await until('FEEDBACK|');send('HOLD');send('STOP');send('CONTOUR');send('STOP');send('PING');await until('PONG');}
   send('DEMO|1');assert.equal(scene(await until('SCENE|')).holes,1);
   send('ELEMENT|0|0');await until('DESCRIPTION|');send('STOP');

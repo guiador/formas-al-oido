@@ -1,4 +1,4 @@
-FORMAS AL OÍDO · WINDOWS 0.5
+FORMAS AL OÍDO · WINDOWS 0.6
 
 Descomprime toda la carpeta. Abre Formas-al-oido.exe y conserva runtime,
 formas-engine.jar, jna.jar, kemar.bin, las bibliotecas DLL, openal y vision junto al ejecutable.
@@ -93,3 +93,13 @@ En Sonido y mando > Motor espacial puedes elegir OpenAL Soft HRTF.
 Recomendado con audífonos. Los otros modos siguen disponibles. Si OpenAL no
 puede inicializarse se anuncia y se utiliza KEMAR. Conserva jna.jar, soft_oal.dll
 y la carpeta openal, que incluye las licencias y el código fuente de OpenAL.
+
+MATEMÁTICAS Y PIZARRA PROGRESIVA
+Abre Matemáticas, elige un ejemplo y prepara la expresión. Recorre las etapas
+con anterior, repetir y siguiente. Las operaciones agrupadas conservan el
+contexto y las ecuaciones explican cambios y motivos en ambos miembros.
+Hay llevadas/préstamos, ejemplos de álgebra y trigonometría, voces instaladas,
+historial de sesión y plano cartesiano con recorrido y marcas de ejes.
+No requiere Python. Genny no se incluye: sólo se exporta un guion opcional.
+No lee fórmulas ni el desarrollo de una pizarra fotografiada.
+Manual: https://github.com/guiador/formas-al-oido/blob/main/docs/MATEMATICAS.md

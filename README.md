@@ -6,14 +6,16 @@ Prototipo abierto en desarrollo. Las interpretaciones de imágenes son aproximad
 
 ## Descargar y empezar
 
+Nuevo: **Matemáticas y pizarra progresiva**, con aritmética exacta, desarrollo verbalizado de operaciones, ecuaciones lineales, ejemplos de álgebra y trigonometría, y ocho planos sonoros. TTS nativo sin Python. [Uso y límites](docs/MATEMATICAS.md).
+
 Nuevo: **OpenAL Soft HRTF** seleccionable en Android y Windows, con regreso a KEMAR si no se puede inicializar. [Uso, compilación y pruebas](docs/OPENAL.md).
 
-Android 0.10 / Windows 0.5: nueva exploración inteligente de capturas con componentes ampliables, dos variantes locales de SSD-MobileNet, Gemini y API compatible configurables. Las interpretaciones y analogías están separadas de la geometría. [Manual, privacidad, licencias y límites](docs/IMAGEN-INTELIGENTE.md).
+Android 0.11 / Windows 0.6: nueva exploración inteligente de capturas con componentes ampliables, dos variantes locales de SSD-MobileNet, Gemini y API compatible configurables. Las interpretaciones y analogías están separadas de la geometría. [Manual, privacidad, licencias y límites](docs/IMAGEN-INTELIGENTE.md).
 
 [Descargas para Android y Windows](https://github.com/guiador/formas-al-oido/releases/latest).
 
-- **Android 0.10:** un APK universal de 32/64 bits, Android 8 o posterior. Instala el APK y comienza en Guía. Firma local de pruebas, sin credenciales incluidas en el repositorio.
-- **Windows 0.5:** paquetes portátiles x86 y x64, Windows 10/11 con .NET Framework 4.8. Descomprime toda la carpeta y abre Formas-al-oido.exe. Incluye el motor y su entorno Java; no debes instalar Java aparte. No tiene firma digital de editor. ARM64 no se ha probado.
+- **Android 0.11:** un APK universal de 32/64 bits, Android 8 o posterior. Instala el APK y comienza en Guía. Firma local de pruebas, sin credenciales incluidas en el repositorio.
+- **Windows 0.6:** paquetes portátiles x86 y x64, Windows 10/11 con .NET Framework 4.8. Descomprime toda la carpeta y abre Formas-al-oido.exe. Incluye el motor y su entorno Java; no debes instalar Java aparte. No tiene firma digital de editor. ARM64 no se ha probado.
 - **Web:** prototipo inicial estático en `web/`, con alcance menor que las versiones nativas. Sirve esa carpeta desde localhost para probarla.
 
 No necesitas pantalla táctil en Windows. En el lienzo puedes usar flechas, ratón manteniendo el botón izquierdo o un dedo en un monitor táctil. Mayúsculas permite pasos finos, Control pasos amplios, Inicio vuelve al centro, Espacio repite y Tab sale del lienzo. La vibración es opcional y, en Windows, se implementa para mandos XInput con motores compatibles.

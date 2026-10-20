@@ -22,7 +22,7 @@ foreach($architecture in @('x32','x64')){
  $response=Join-Path $workspace "build/csc-$platform.rsp"
  $exePath=Join-Path $output 'Formas-al-oido.exe'
  $sourcePath=Join-Path $workspace 'src/FormasWindows.cs'
- @('/nologo','/target:winexe',"/platform:$platform",'/optimize+','/codepage:65001',('/out:"'+$exePath+'"'),'/reference:System.Windows.Forms.dll','/reference:System.Drawing.dll','/reference:System.Web.Extensions.dll',('/reference:"'+(Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/netstandard.dll')+'"'),('/reference:"'+(Join-Path $root 'tools/ai-cache/managed/Microsoft.ML.OnnxRuntime.dll')+'"'),('/reference:"'+(Join-Path $root 'tools/ai-cache/managed/System.Memory.dll')+'"'),('/reference:"'+(Join-Path $root 'tools/ai-cache/managed/System.Buffers.dll')+'"'),('/reference:"'+$speech+'"'),('"'+$sourcePath+'"'),('"'+(Join-Path $workspace 'src/WindowsStudio.cs')+'"'),('"'+(Join-Path $workspace 'src/LocalVision.cs')+'"'),('"'+(Join-Path $workspace 'src/WindowsVision.cs')+'"')) | Set-Content -LiteralPath $response -Encoding UTF8
+ @('/nologo','/target:winexe',"/platform:$platform",'/optimize+','/codepage:65001',('/out:"'+$exePath+'"'),'/reference:System.Windows.Forms.dll','/reference:System.Drawing.dll','/reference:System.Web.Extensions.dll',('/reference:"'+(Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/netstandard.dll')+'"'),('/reference:"'+(Join-Path $root 'tools/ai-cache/managed/Microsoft.ML.OnnxRuntime.dll')+'"'),('/reference:"'+(Join-Path $root 'tools/ai-cache/managed/System.Memory.dll')+'"'),('/reference:"'+(Join-Path $root 'tools/ai-cache/managed/System.Buffers.dll')+'"'),('/reference:"'+$speech+'"'),('"'+$sourcePath+'"'),('"'+(Join-Path $workspace 'src/WindowsStudio.cs')+'"'),('"'+(Join-Path $workspace 'src/LocalVision.cs')+'"'),('"'+(Join-Path $workspace 'src/WindowsVision.cs')+'"'),('"'+(Join-Path $workspace 'src/WindowsMath.cs')+'"')) | Set-Content -LiteralPath $response -Encoding UTF8
  & $csc "@$response"
  if($LASTEXITCODE -ne 0){throw "No se pudo compilar Windows $platform"}
  Copy-Item -LiteralPath "$workspace/build/formas-engine.jar","$root/core/assets/kemar.bin","$root/core/assets/KEMAR-NOTICE.txt","$workspace/LEEME.txt" -Destination $output -Force
@@ -40,7 +40,7 @@ foreach($architecture in @('x32','x64')){
  Copy-Item -LiteralPath "$root/tools/audio-cache/jna.jar","$root/tools/audio-cache/$platform/soft_oal.dll" -Destination $output -Force
  Reset-GeneratedDirectory "$output/openal" $output
  Copy-Item -Path "$root/core/assets/openal/*" -Destination "$output/openal" -Force
- $provenance=[ordered]@{architecture=$platform;runtime_version=$asset.version.semver;runtime_url=$asset.binary.package.link;runtime_sha256=$asset.binary.package.checksum;app_version='0.5.0';engine_audio_version='0.10.0'}
+ $provenance=[ordered]@{architecture=$platform;runtime_version=$asset.version.semver;runtime_url=$asset.binary.package.link;runtime_sha256=$asset.binary.package.checksum;app_version='0.6.0';engine_audio_version='0.10.0'}
  $provenance | ConvertTo-Json | Set-Content -LiteralPath "$output/build-info.json" -Encoding UTF8
  Copy-Item -Path "$root/tools/ai-cache/managed/*.dll","$root/tools/ai-cache/$platform/*.dll" -Destination $output -Force; Reset-GeneratedDirectory "$output/vision" $output; Copy-Item -Path "$root/core/assets/vision/*" -Destination "$output/vision" -Recurse -Force; Write-Output "EXE: $output/Formas-al-oido.exe"
 }

@@ -36,7 +36,7 @@ $keystore=Join-Path $workspace 'private\formas-pruebas.jks'
 if(-not(Test-Path -LiteralPath $keystore)){Run "$Jdk\bin\keytool.exe" @('-genkeypair','-keystore',$keystore,'-storepass','android','-keypass','android','-alias','formas-pruebas','-keyalg','RSA','-keysize','3072','-validity','10000','-dname','CN=Formas al oido Prototype, O=Local development, C=PE')}
 $final=Join-Path (Split-Path -Parent $workspace) 'Formas al oído/Android'
 New-Item -ItemType Directory -Force -Path $final | Out-Null
-$apk=Join-Path $final 'Formas-al-oido-0.10.0.apk'
+$apk=Join-Path $final 'Formas-al-oido-0.11.0.apk'
 Run "$Jdk\bin\java.exe" @('-jar',"$tools\lib\apksigner.jar",'sign','--v4-signing-enabled','false','--ks',$keystore,'--ks-key-alias','formas-pruebas','--ks-pass','pass:android','--key-pass','pass:android','--out',$apk,"$output\aligned.apk")
 Run "$Jdk\bin\java.exe" @('-jar',"$tools\lib\apksigner.jar",'verify','--verbose',$apk)
 Run "$tools\zipalign.exe" @('-c','4',$apk)

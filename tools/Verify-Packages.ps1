@@ -10,11 +10,11 @@ function Check-Model($zip,$prefix,$name){
  if($actual -ne $expected){throw "Peso de modelo diferente: $name"}
 }
 foreach($arch in @('x86','x64')){
- $zip=[IO.Compression.ZipFile]::OpenRead((Join-Path $final "Windows/Formas-al-oido-Windows-$arch-0.5.0.zip"))
+ $zip=[IO.Compression.ZipFile]::OpenRead((Join-Path $final "Windows/Formas-al-oido-Windows-$arch-0.6.0.zip"))
  try{if($zip.Entries.FullName -match '^vision/vision/'){throw 'Directorio de modelos duplicado'};foreach($model in @('model.onnx','model-standard.onnx')){Check-Model $zip 'vision/' $model};foreach($audioFile in @('jna.jar','soft_oal.dll','openal/openal-source.zip','openal/JNA-LICENSE','openal/COPYING')){if(-not $zip.GetEntry($audioFile)){throw "Falta dependencia de audio: $audioFile"}};if(-not $zip.GetEntry('vision/licenses/ONNX-MODELS-LICENSE.txt')){throw 'Falta licencia de modelos'}}finally{$zip.Dispose()}
  Write-Output "PASS Windows ${arch}: modelos y licencias presentes."
 }
-$apkPath=Join-Path $final 'Android/Formas-al-oido-0.10.0.apk'
+$apkPath=Join-Path $final 'Android/Formas-al-oido-0.11.0.apk'
 # Read the ZIP central directory: Android 11+ rejects compressed resources.arsc.
 $reader=[IO.BinaryReader]::new([IO.File]::OpenRead($apkPath))
 try{

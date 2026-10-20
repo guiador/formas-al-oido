@@ -1,4 +1,6 @@
-# Formas al oído para Windows 0.4
+# Formas al oído para Windows 0.6
+
+Abre la pestaña **Matemáticas** para pizarra progresiva, operaciones exactas, ecuaciones lineales, ejemplos algebraicos/trigonométricos y plano cartesiano. Usa un TTS instalado y no necesita Python. [Manual y límites](../docs/MATEMATICAS.md).
 
 Interfaz nativa Windows Forms (.NET Framework 4.8), con un proceso Java local incluido para reutilizar Geometry, Curriculum, TouchMap, ImageTrace y Sound del módulo core. No usa navegador, WebView ni servidor. El protocolo entre procesos sólo usa entrada y salida estándar. La síntesis PCM de 44.1 kHz sale por Java Sound al dispositivo predeterminado de Windows.
 
@@ -43,4 +45,4 @@ WindowsStudio.cs separa los controles de trazado y lectura del formulario princi
 
 ## Imagen inteligente
 
-Windows 0.4 incluye dos variantes locales de SSD-MobileNet y conexiones a Gemini/API compatible. Ver docs/IMAGEN-INTELIGENTE.md. Las compilaciones verifican dependencias mediante tools/Prepare-Vision.ps1; las inferencias locales pueden comprobarse con windows/test-vision.ps1. Falta validación humana de la interacción y de los lectores de pantalla.
+Windows 0.6 incluye dos variantes locales de SSD-MobileNet y conexiones a Gemini/API compatible. Ver docs/IMAGEN-INTELIGENTE.md. Las compilaciones verifican dependencias mediante tools/Prepare-Vision.ps1; las inferencias locales pueden comprobarse con windows/test-vision.ps1. Falta validación humana de la interacción y de los lectores de pantalla.
