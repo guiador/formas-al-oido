@@ -1,4 +1,4 @@
-# Formas al oído para Windows 0.7
+# Formas al oído para Windows 0.8
 
 Abre la pestaña **Matemáticas** para pizarra progresiva, operaciones exactas, ecuaciones lineales, ejemplos algebraicos/trigonométricos y plano cartesiano. Usa un TTS instalado y no necesita Python. [Manual y límites](../docs/MATEMATICAS.md).
 
@@ -45,4 +45,4 @@ WindowsStudio.cs separa los controles de trazado y lectura del formulario princi
 
 ## Imagen inteligente
 
-Windows 0.7 incluye dos variantes locales de SSD-MobileNet y conexiones a Gemini/API compatible. Ver docs/IMAGEN-INTELIGENTE.md. Las compilaciones verifican dependencias mediante tools/Prepare-Vision.ps1; las inferencias locales pueden comprobarse con windows/test-vision.ps1. Falta validación humana de la interacción y de los lectores de pantalla.
+Windows 0.8 incluye dos variantes locales de SSD-MobileNet y conexiones a Gemini/API compatible. Ver docs/IMAGEN-INTELIGENTE.md. Las compilaciones verifican dependencias mediante tools/Prepare-Vision.ps1; las inferencias locales pueden comprobarse con windows/test-vision.ps1. Falta validación humana de la interacción y de los lectores de pantalla.

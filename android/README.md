@@ -1,4 +1,4 @@
-# Formas al oído · Android nativo 0.12.0
+# Formas al oído · Android nativo 0.13.0
 
 Aplicación Java para Android 8.0 o posterior. No usa WebView. APK de pruebas para todas las arquitecturas, firmado con la misma clave que 0.3 para permitir la actualización.
 
@@ -20,7 +20,7 @@ Consultar PRUEBA-EN-CLASE.md para una comparación breve de figuras conocidas, i
 
 ## Empezar
 
-1. Instala `../Formas al oído/Android/Formas-al-oido-0.12.0.apk` sobre la versión anterior. Exporta la sesión si quieres una copia adicional.
+1. Instala `../Formas al oído/Android/Formas-al-oido-0.13.0.apk` sobre la versión anterior. Exporta la sesión si quieres una copia adicional.
 2. La app abre en **Guía**, con una actividad cada vez. **Empezar o repetir** reproduce la explicación y el recorrido. La voz es opcional.
 3. Explora, pide una pista o usa **Me perdí** para escuchar centro y esquinas. **Lo encontré** guarda tu impresión; no exige acertar ni avanzar.
 4. **Continuar** cambia de actividad. **Elegir una actividad** permite saltar libremente. La actividad y variante se guardan.
@@ -99,6 +99,6 @@ El normalizador de rutas del APK comprimía resources.arsc. Android con destino 
 
 Instalación por ADB y apertura correctas en Samsung SM-A065M con Android 16 (16 de octubre de 2026). Esta prueba no valida todavía la cámara, reconocimiento local ni interacción con TalkBack. En el otro teléfono, Xiaomi con Android 13, la política de instalación USB impidió llegar a comprobar el APK; INSTALL_FAILED_USER_RESTRICTED requiere permitir la instalación en el teléfono.
 
-## OpenAL Soft 0.12.0
+## OpenAL Soft 0.13.0
 
 En Sonido > Motor espacial está OpenAL Soft HRTF, junto a KEMAR, estéreo y altavoz único. Consulta [la integración y las pruebas](../docs/OPENAL.md).

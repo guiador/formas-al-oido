@@ -1,4 +1,4 @@
-FORMAS AL OÍDO · WINDOWS 0.7
+FORMAS AL OÍDO · WINDOWS 0.8
 
 Descomprime toda la carpeta. Abre Formas-al-oido.exe y conserva runtime,
 formas-engine.jar, jna.jar, kemar.bin, las bibliotecas DLL, openal y vision junto al ejecutable.
@@ -110,3 +110,8 @@ Elige exploración libre, entrenamiento guiado o repaso de notas. Avance manual.
 Puedes editar anotaciones, añadir comentarios y guardar/abrir lecciones .fao.
 Las notas sólo se conservan al cerrar si guardas el archivo FAO.
 Guía: https://github.com/guiador/formas-al-oido/blob/main/docs/PRUEBA-DOCENTE.txt
+
+Marco y barridos matemáticos: el lienzo ya permite alcanzar los bordes.
+En Matemáticas hay botones para marco, centro y esquinas, filas, columnas,
+cuadrantes, relleno y contorno. Ajustar vacío, contacto y vibración abre
+los controles compartidos de Sonido y mando.

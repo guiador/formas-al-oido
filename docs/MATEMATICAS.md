@@ -1,6 +1,6 @@
 # Matemáticas y pizarra progresiva
 
-Android 0.12.0 y Windows 0.7.0 incorporan un taller matemático propio. En Android abre **Matemáticas**; en Windows elige la pestaña del mismo nombre. El cálculo y la geometría se resuelven localmente en Java: no necesitan Python, una cuenta ni una API. La voz es la del motor TTS instalado que elijas; su conexión, descargas y privacidad dependen de ese motor.
+Android 0.13.0 y Windows 0.8.0 incorporan un taller matemático propio. En Android abre **Matemáticas**; en Windows elige la pestaña del mismo nombre. El cálculo y la geometría se resuelven localmente en Java: no necesitan Python, una cuenta ni una API. La voz es la del motor TTS instalado que elijas; su conexión, descargas y privacidad dependen de ese motor.
 
 ## Anotaciones y lecciones compartidas
 
@@ -31,6 +31,10 @@ Este taller no observa la secuencia de una pizarra real ni reconoce fórmulas en
 Aritmética racional exacta con +, -, *, /, ^ y paréntesis. Se aceptan coma decimal, signos ×, ÷, − y superíndices ²/³. Máximo 160 caracteres, 64 símbolos, doce cifras por número, 16 niveles de anidación y resultados racionales de hasta 256 bits. Los exponentes aritméticos son enteros entre -12 y 12. La división entre cero y cero elevado a cero se rechazan.
 
 Álgebra admite coeficientes racionales, multiplicación implícita como `2x` y división por una constante. No resuelve ecuaciones cuadráticas, sistemas, matrices ni expresiones con otras incógnitas. Trigonometría calcula en coma flotante y anuncia siempre aproximación, mostrada con hasta diez decimales; no promete diez decimales de exactitud. Rechaza dominios no reales, tangentes próximas a sus polos y magnitudes fuera del límite del taller. No es un sistema de álgebra computacional general.
+
+## Referencias y barridos del plano
+
+El lienzo matemático usa ahora marco accesible, aire en el vacío, proximidad, modos de contacto y barridos del mismo núcleo que figuras e imágenes. Android tiene pantalla completa; Windows permite alcanzar el marco con flechas y ratón. [Guía de exploración matemática](EXPLORACION-MATEMATICA.md).
 
 ## Plano y alternativas inspiradas en calculadoras parlantes
 

@@ -1,6 +1,6 @@
 # Lección Formas al oído v1 (.fao)
 
-Prototipo de intercambio de una lección matemática entre Android 0.12 y Windows 0.7. Archivo JSON UTF-8 de hasta 262144 bytes, extensión `.fao`. No es ZIP ni contiene código ejecutable. Un profesor puede enviarlo como documento por cualquier servicio externo; la aplicación no crea cuentas ni envía mensajes.
+Prototipo de intercambio de una lección matemática entre Android 0.13 y Windows 0.8. Archivo JSON UTF-8 de hasta 262144 bytes, extensión `.fao`. No es ZIP ni contiene código ejecutable. Un profesor puede enviarlo como documento por cualquier servicio externo; la aplicación no crea cuentas ni envía mensajes.
 
 Campos del documento:
 

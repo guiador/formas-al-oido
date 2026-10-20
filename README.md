@@ -6,18 +6,20 @@ Prototipo abierto en desarrollo. Las interpretaciones de imágenes son aproximad
 
 ## Descargar y empezar
 
+Nuevo: **Marco, vacío y barridos en Matemáticas**, con aire espacial, contorno/relleno/negativo, referencia de centro y esquinas y pantalla completa Android. [Uso y correcciones](docs/EXPLORACION-MATEMATICA.md).
+
 Nuevo: **Lecciones FAO con anotaciones docentes**, lectura a petición, guía manual y repaso de notas. Dos ejemplos incluidos para evaluar con un profesor ciego. [Prueba docente](docs/PRUEBA-DOCENTE.txt) · [Formato abierto](docs/FORMATO-LECCION-FAO.md).
 
 Nuevo: **Matemáticas y pizarra progresiva**, con aritmética exacta, desarrollo verbalizado de operaciones, ecuaciones lineales, ejemplos de álgebra y trigonometría, y ocho planos sonoros. TTS nativo sin Python. [Uso y límites](docs/MATEMATICAS.md).
 
 Nuevo: **OpenAL Soft HRTF** seleccionable en Android y Windows, con regreso a KEMAR si no se puede inicializar. [Uso, compilación y pruebas](docs/OPENAL.md).
 
-Android 0.12 / Windows 0.7: nueva exploración inteligente de capturas con componentes ampliables, dos variantes locales de SSD-MobileNet, Gemini y API compatible configurables. Las interpretaciones y analogías están separadas de la geometría. [Manual, privacidad, licencias y límites](docs/IMAGEN-INTELIGENTE.md).
+Android 0.13 / Windows 0.8: nueva exploración inteligente de capturas con componentes ampliables, dos variantes locales de SSD-MobileNet, Gemini y API compatible configurables. Las interpretaciones y analogías están separadas de la geometría. [Manual, privacidad, licencias y límites](docs/IMAGEN-INTELIGENTE.md).
 
 [Descargas para Android y Windows](https://github.com/guiador/formas-al-oido/releases/latest).
 
-- **Android 0.12:** un APK universal de 32/64 bits, Android 8 o posterior. Instala el APK y comienza en Guía. Firma local de pruebas, sin credenciales incluidas en el repositorio.
-- **Windows 0.7:** paquetes portátiles x86 y x64, Windows 10/11 con .NET Framework 4.8. Descomprime toda la carpeta y abre Formas-al-oido.exe. Incluye el motor y su entorno Java; no debes instalar Java aparte. No tiene firma digital de editor. ARM64 no se ha probado.
+- **Android 0.13:** un APK universal de 32/64 bits, Android 8 o posterior. Instala el APK y comienza en Guía. Firma local de pruebas, sin credenciales incluidas en el repositorio.
+- **Windows 0.8:** paquetes portátiles x86 y x64, Windows 10/11 con .NET Framework 4.8. Descomprime toda la carpeta y abre Formas-al-oido.exe. Incluye el motor y su entorno Java; no debes instalar Java aparte. No tiene firma digital de editor. ARM64 no se ha probado.
 - **Web:** prototipo inicial estático en `web/`, con alcance menor que las versiones nativas. Sirve esa carpeta desde localhost para probarla.
 
 No necesitas pantalla táctil en Windows. En el lienzo puedes usar flechas, ratón manteniendo el botón izquierdo o un dedo en un monitor táctil. Mayúsculas permite pasos finos, Control pasos amplios, Inicio vuelve al centro, Espacio repite y Tab sale del lienzo. La vibración es opcional y, en Windows, se implementa para mandos XInput con motores compatibles.

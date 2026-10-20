@@ -1,5 +1,5 @@
 FORMAS AL OÍDO — PRUEBA CON EL PROFESOR
-Android 0.12.0 / Windows 0.7.0
+Android 0.13.0 / Windows 0.8.0
 
 OBJETIVO
 Probar si una explicación vinculada a una etapa ayuda a seguir el desarrollo
@@ -82,3 +82,10 @@ La experiencia real con lectores y la utilidad didáctica están por evaluar.
 
 Código, manuales y descargas:
 https://github.com/guiador/formas-al-oido
+
+MARCO, VACÍO Y BARRIDOS
+En Matemáticas, Abrir lienzo matemático a pantalla completa permite explorar
+el marco y el aire del vacío. Hay centro y esquinas, filas, columnas,
+cuadrantes, relleno y contorno. Los ajustes se ofrecen junto al plano.
+Guía: https://github.com/guiador/formas-al-oido/blob/main/docs/EXPLORACION-MATEMATICA.md
+No se deben usar inspecciones uiautomator dump para probar con un lector activo.

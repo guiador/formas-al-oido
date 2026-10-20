@@ -24,3 +24,5 @@ if($LASTEXITCODE -ne 0){throw 'Pruebas matemáticas fallidas'}
 
 & "$Jdk/bin/java.exe" -cp $out TeachingChecks
 if($LASTEXITCODE -ne 0){throw 'Pruebas de lecciones y anotaciones fallidas'}
+& "$Jdk/bin/java.exe" -cp $out MathExplorationChecks
+if($LASTEXITCODE -ne 0){throw 'Pruebas de exploración matemática fallidas'}
