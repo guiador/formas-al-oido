@@ -1,0 +1,84 @@
+FORMAS AL OÍDO — PRUEBA CON EL PROFESOR
+Android 0.12.0 / Windows 0.7.0
+
+OBJETIVO
+Probar si una explicación vinculada a una etapa ayuda a seguir el desarrollo
+sin interrumpir la exploración. No hace falta preparar una clase completa.
+
+PRIMERA PRUEBA: CINCO A DIEZ MINUTOS, A TU RITMO
+1. Abre Matemáticas. Busca «Probar ecuación con notas del profesor».
+   La lección se abre sin iniciar la voz y conserva tus opciones de escucha.
+2. Elige cómo escuchar:
+   - Exploración libre: Anterior/Siguiente cambia el fragmento sin narración
+     propia automática. «Leer o repetir» permite solicitar su lectura.
+   - Entrenamiento guiado: Anterior/Siguiente lee la etapa y, si existe,
+     el nombre de su nota. Tú decides cuándo continuar.
+   - Repaso de notas: Anterior/Siguiente salta los fragmentos sin anotación
+     en el orden de lectura elegido. Lee nombre y explicación, sin temporizador.
+3. Elige «Fragmento seleccionado» como elemento de la anotación.
+   Usa «Leer nombre de la nota», «Leer explicación» o «Pedir pista».
+   «Leer expresión completa» recupera el punto de partida.
+4. Usa «Editar anotación del elemento elegido». El destino queda fijado,
+   aunque después te muevas. Modifica la explicación o escribe una duda o
+   propuesta en «Respuesta, duda o propuesta sobre este elemento».
+   «Guardar anotación» la conserva en memoria. Al editar otra nota, leerla
+   o guardar el archivo se incorpora también el texto que estabas editando.
+5. Escribe en «Alternativas o comentarios generales para devolver al profesor»
+   y pulsa «Guardar lección FAO para compartir». Ese archivo sí conserva
+   la lección para abrirla después o devolverla por correo u otro medio.
+
+VOZ Y SONIDO
+La voz propia viene desactivada en una instalación nueva. Puedes mantener
+TalkBack, NVDA o Narrador, o activar «Voz propia del módulo» y elegir un TTS
+instalado. Ajusta la velocidad. El archivo no impone voz, volumen ni modo
+de escucha. Los anuncios del lector de pantalla al enfocar controles
+siguen dependiendo del lector y de sus ajustes.
+
+Al pedir una explicación se detiene el audio del dibujo y la narración previa.
+El punto y la etapa se conservan. Para seguir oyendo el dibujo, usa «Escuchar
+posición del punto» o vuelve a explorar. El sonido no se reinicia solo.
+Detener voz y sonido cancela la lectura; Leer o repetir comienza el fragmento
+de nuevo. No hay pausa de voz con reanudación en mitad de una frase.
+
+OTRAS DOS PRUEBAS
+- Abre el ejemplo de fracciones y revisa si el denominador común se entiende.
+- En el plano, elige «Vista general del plano» o «Punto actual del plano».
+  Puedes anotar una coordenada concreta. Las notas de puntos usan décimas
+  de unidad; no son regiones que se anuncien automáticamente al tocarlas.
+
+PARA DEVOLVER ALTERNATIVAS
+No es necesario responder todo. Prueba una operación y comenta lo que ayude:
+- ¿En qué etapa perdiste el hilo? ¿Qué faltó nombrar?
+- ¿Qué explicación cambiarías como profesor de matemáticas?
+- ¿Hay demasiadas palabras o se omite un cambio importante?
+- ¿Prefieres voz propia, lector de pantalla o combinarlos?
+- ¿Qué control fue difícil encontrar o usar sin visión?
+- ¿Qué ejemplo matemático añadirías primero?
+Puedes guardar el comentario en una nota o en los comentarios generales
+y devolver el archivo .fao modificado. Nadie tiene que incluir su nombre.
+
+INTERCAMBIO
+Envía el .fao como archivo/documento. En el otro equipo abre Matemáticas y
+«Abrir lección FAO». No depende de una plataforma de clases ni de un servidor
+nuestro. El envío por correo, mensajería o nube se hace fuera de la aplicación.
+Los textos y comentarios quedan dentro del archivo: revisa lo que escribes
+antes de compartirlo. No se envía automáticamente ninguna respuesta.
+
+ALCANCE DE ESTA PRUEBA
+El formato guarda un ejercicio, seis secuencias de lectura, notas, comentarios,
+un plano de los ocho ejemplos disponibles y el punto/fragmento seleccionados.
+Conserva las etapas recibidas, aunque una futura versión calcule de otra forma.
+Todavía no guarda toda la aplicación, fotos, cámara, trazos libres, audio
+exacto, una clase con varios ejercicios ni una pizarra capturada en directo.
+No comprueba que las notas o etapas del autor sean matemáticamente correctas.
+
+Guarda el .fao antes de cerrar: el historial y las notas no guardadas como
+archivo pueden perderse al terminar la sesión. La importación/exportación
+JSON de ejercicio antiguo no incluye estas anotaciones; usa FAO.
+
+Windows: controles y guardado/reapertura probados en x86 y x64.
+Android: APK universal compilado y firmado, sin prueba física en esta entrega.
+La experiencia real con lectores y la utilidad didáctica están por evaluar.
+
+Código, manuales y descargas:
+https://github.com/guiador/formas-al-oido

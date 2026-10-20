@@ -2,6 +2,8 @@ $ErrorActionPreference='Stop'
 $root=Split-Path -Parent $PSScriptRoot
 $final=Join-Path $root 'Formas al oído'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
+$teacherZip=[IO.Compression.ZipFile]::OpenRead((Join-Path $final 'Formas-al-oido-Prueba-docente-0.7.0.zip'))
+try{if($teacherZip.Entries.Count -ne 4){throw 'El paquete docente debe contener cuatro archivos'};foreach($name in @('ecuacion-con-anotaciones.fao','fracciones-con-anotaciones.fao','PRUEBA-DOCENTE.txt','FORMATO-LECCION-FAO.md')){if(-not $teacherZip.GetEntry($name)){throw "Falta material docente: $name"}}}finally{$teacherZip.Dispose()}
 function Check-Model($zip,$prefix,$name){
  $entry=$zip.GetEntry($prefix+$name);if(-not $entry){throw "Falta modelo: $prefix$name"}
  $inputStream=$entry.Open();$sha=[Security.Cryptography.SHA256]::Create()
@@ -10,11 +12,11 @@ function Check-Model($zip,$prefix,$name){
  if($actual -ne $expected){throw "Peso de modelo diferente: $name"}
 }
 foreach($arch in @('x86','x64')){
- $zip=[IO.Compression.ZipFile]::OpenRead((Join-Path $final "Windows/Formas-al-oido-Windows-$arch-0.6.0.zip"))
+ $zip=[IO.Compression.ZipFile]::OpenRead((Join-Path $final "Windows/Formas-al-oido-Windows-$arch-0.7.0.zip"))
  try{if($zip.Entries.FullName -match '^vision/vision/'){throw 'Directorio de modelos duplicado'};foreach($model in @('model.onnx','model-standard.onnx')){Check-Model $zip 'vision/' $model};foreach($audioFile in @('jna.jar','soft_oal.dll','openal/openal-source.zip','openal/JNA-LICENSE','openal/COPYING')){if(-not $zip.GetEntry($audioFile)){throw "Falta dependencia de audio: $audioFile"}};if(-not $zip.GetEntry('vision/licenses/ONNX-MODELS-LICENSE.txt')){throw 'Falta licencia de modelos'}}finally{$zip.Dispose()}
  Write-Output "PASS Windows ${arch}: modelos y licencias presentes."
 }
-$apkPath=Join-Path $final 'Android/Formas-al-oido-0.11.0.apk'
+$apkPath=Join-Path $final 'Android/Formas-al-oido-0.12.0.apk'
 # Read the ZIP central directory: Android 11+ rejects compressed resources.arsc.
 $reader=[IO.BinaryReader]::new([IO.File]::OpenRead($apkPath))
 try{

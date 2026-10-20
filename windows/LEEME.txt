@@ -1,4 +1,4 @@
-FORMAS AL OÍDO · WINDOWS 0.6
+FORMAS AL OÍDO · WINDOWS 0.7
 
 Descomprime toda la carpeta. Abre Formas-al-oido.exe y conserva runtime,
 formas-engine.jar, jna.jar, kemar.bin, las bibliotecas DLL, openal y vision junto al ejecutable.
@@ -103,3 +103,10 @@ historial de sesión y plano cartesiano con recorrido y marcas de ejes.
 No requiere Python. Genny no se incluye: sólo se exporta un guion opcional.
 No lee fórmulas ni el desarrollo de una pizarra fotografiada.
 Manual: https://github.com/guiador/formas-al-oido/blob/main/docs/MATEMATICAS.md
+
+PRUEBA DOCENTE
+En Matemáticas abre Probar ecuación/fracciones con notas del profesor.
+Elige exploración libre, entrenamiento guiado o repaso de notas. Avance manual.
+Puedes editar anotaciones, añadir comentarios y guardar/abrir lecciones .fao.
+Las notas sólo se conservan al cerrar si guardas el archivo FAO.
+Guía: https://github.com/guiador/formas-al-oido/blob/main/docs/PRUEBA-DOCENTE.txt

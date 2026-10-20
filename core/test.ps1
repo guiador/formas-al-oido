@@ -21,3 +21,6 @@ if($LASTEXITCODE -ne 0){throw 'Pruebas de orientación, pausa y autoría fallida
 if($LASTEXITCODE -ne 0){throw 'Pruebas de regiones y proveedores de IA fallidas'}
 & "$Jdk/bin/java.exe" -cp $out MathChecks
 if($LASTEXITCODE -ne 0){throw 'Pruebas matemáticas fallidas'}
+
+& "$Jdk/bin/java.exe" -cp $out TeachingChecks
+if($LASTEXITCODE -ne 0){throw 'Pruebas de lecciones y anotaciones fallidas'}

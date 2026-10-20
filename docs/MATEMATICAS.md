@@ -1,6 +1,10 @@
 # Matemáticas y pizarra progresiva
 
-Android 0.11.0 y Windows 0.6.0 incorporan un taller matemático propio. En Android abre **Matemáticas**; en Windows elige la pestaña del mismo nombre. El cálculo y la geometría se resuelven localmente en Java: no necesitan Python, una cuenta ni una API. La voz es la del motor TTS instalado que elijas; su conexión, descargas y privacidad dependen de ese motor.
+Android 0.12.0 y Windows 0.7.0 incorporan un taller matemático propio. En Android abre **Matemáticas**; en Windows elige la pestaña del mismo nombre. El cálculo y la geometría se resuelven localmente en Java: no necesitan Python, una cuenta ni una API. La voz es la del motor TTS instalado que elijas; su conexión, descargas y privacidad dependen de ese motor.
+
+## Anotaciones y lecciones compartidas
+
+Nuevo: notas por fragmento, plano o coordenada; nombre, explicación, pista y comentario. Tres modos de escucha, avance manual y archivo .fao con etapas conservadas y comentarios para devolver. La voz propia viene desactivada en una instalación nueva; los usuarios anteriores mantienen su preferencia en Android. [Guía para el profesor](PRUEBA-DOCENTE.txt) y [formato FAO](FORMATO-LECCION-FAO.md). Las antiguas exportaciones JSON no incluyen las notas.
 
 ## Aprender el desarrollo, no sólo el resultado
 

@@ -1,0 +1,34 @@
+package org.formasaloido;
+
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
+/** Portable, inert teaching notes and a frozen reading sequence. No voice or network settings. */
+public final class MathTeaching {
+ public static final int MAX_BYTES=262144;
+ public static final String[] KEYS={"tokens","digits","rows","columns","steps","development"};
+ public final MathLesson lesson;
+ public String title="Lección de matemáticas",feedback="";
+ public int mode=5,position,plane;
+ public double x,y;
+ public final Map<String,List<String>> readings=new LinkedHashMap<>();
+ public final Map<String,Map<String,Object>> notes=new LinkedHashMap<>();
+ public MathTeaching(MathLesson value){lesson=value;Map<String,Object> data=value.data();for(String key:KEYS){List<String> list=new ArrayList<>();for(Object item:(List<?>)data.get(key))list.add((String)item);readings.put(key,list);}}
+ public String fragment(int order,int index){if(order<0||order>=KEYS.length||index<0||index>=readings.get(KEYS[order]).size())throw new IllegalArgumentException("Fragmento de anotación no válido.");return "fragment:"+order+":"+index;}
+ public String describeTarget(String key){target(key);String[] p=key.split(":");if(p[0].equals("fragment"))return new String[]{"Símbolos","Cifras","Filas","Columnas","Procedimiento","Pizarra progresiva"}[Integer.parseInt(p[1])]+", fragmento "+(Integer.parseInt(p[2])+1);int kind=Integer.parseInt(p[1]);return MathLesson.PLANES[kind]+(p[0].equals("point")?", "+MathLesson.coordinate(Integer.parseInt(p[2])/10.0,Integer.parseInt(p[3])/10.0):", vista general");}
+ public static String pointTarget(int kind,double x,double y){MathLesson.plane(kind);MathLesson.point(x,y);return "point:"+kind+":"+Math.round(x*10)+":"+Math.round(y*10);}
+ private void target(String key){String[] p=key.split(":",-1);try{if(p.length==3&&p[0].equals("fragment")){if(!key.equals(fragment(Integer.parseInt(p[1]),Integer.parseInt(p[2]))))throw new IllegalArgumentException();return;}if(p.length==2&&p[0].equals("plane")){int kind=Integer.parseInt(p[1]);MathLesson.plane(kind);if(!key.equals("plane:"+kind))throw new IllegalArgumentException();return;}if(p.length==4&&p[0].equals("point")){int kind=Integer.parseInt(p[1]);double px=Integer.parseInt(p[2])/10.0,py=Integer.parseInt(p[3])/10.0;if(!key.equals(pointTarget(kind,px,py)))throw new IllegalArgumentException();return;}}catch(RuntimeException e){throw new IllegalArgumentException("Destino de anotación no válido.");}throw new IllegalArgumentException("Destino de anotación no válido.");}
+ public void put(String target,String name,String description,String hint,String comment){target(target);Map<String,Object> note=Json.object("name",bounded(name,160),"description",bounded(description,3000),"hint",bounded(hint,3000),"comment",bounded(comment,3000));if(!notes.containsKey(target)&&notes.size()>=128)throw new IllegalArgumentException("Máximo 128 anotaciones por lección.");notes.put(target,note);}
+ public String note(String target,int level){target(target);Map<String,Object> note=notes.get(target);if(note==null)return "No hay anotación guardada para este elemento.";String key=level==0?"name":level==1?"description":level==2?"hint":"comment";String text=(String)note.get(key);return text.isEmpty()?"Este nivel de la anotación está vacío.":text;}
+ public Map<String,Object> document(){fragment(mode,position);MathLesson.plane(plane);MathLesson.point(x,y);return Json.object("schema","formas-lesson-v1","title",bounded(title,160),"expression",lesson.expression,"readings",readings,"notes",notes,"feedback",bounded(feedback,6000),"cursor",Json.object("mode",mode,"position",position,"plane",plane,"x",x,"y",y));}
+ public String json(){String result=Json.write(document());if(result.getBytes(StandardCharsets.UTF_8).length>MAX_BYTES)throw new IllegalArgumentException("La lección supera 256 KB.");return result;}
+ public Map<String,Object> data(){Map<String,Object> data=lesson.data();for(String key:KEYS)data.put(key,readings.get(key));return Json.object("exercise",data,"book",document());}
+ private static String bounded(String text,int max){if(text==null||text.length()>max)throw new IllegalArgumentException("Texto ausente o demasiado largo.");for(int i=0;i<text.length();i++)if(text.charAt(i)<32&&text.charAt(i)!='\n'&&text.charAt(i)!='\r'&&text.charAt(i)!='\t')throw new IllegalArgumentException("El texto contiene caracteres de control.");return text;}
+ private static Map<?,?> object(Object v){if(!(v instanceof Map))throw new IllegalArgumentException("Estructura de lección no válida.");return (Map<?,?>)v;}
+ private static String text(Map<?,?> m,String key,int max){Object value=m.get(key);if(!(value instanceof String))throw new IllegalArgumentException("Falta texto: "+key);return bounded((String)value,max);}
+ private static double number(Map<?,?> m,String key){Object v=m.get(key);if(!(v instanceof Number)||!Double.isFinite(((Number)v).doubleValue()))throw new IllegalArgumentException("Número no válido: "+key);return ((Number)v).doubleValue();}
+ private static int integer(Map<?,?> m,String key){double n=number(m,key);if(n!=Math.rint(n)||n<Integer.MIN_VALUE||n>Integer.MAX_VALUE)throw new IllegalArgumentException("Índice no válido: "+key);return (int)n;}
+ public static MathTeaching load(String json){if(json==null||json.getBytes(StandardCharsets.UTF_8).length>MAX_BYTES)throw new IllegalArgumentException("La lección supera 256 KB.");Map<?,?> doc=object(Json.parse(json));if(!"formas-lesson-v1".equals(doc.get("schema")))throw new IllegalArgumentException("Versión de lección no compatible.");MathTeaching book=new MathTeaching(new MathLesson(text(doc,"expression",160)));book.title=text(doc,"title",160);book.feedback=text(doc,"feedback",6000);Map<?,?> lists=object(doc.get("readings"));for(String key:KEYS){Object raw=lists.get(key);if(!(raw instanceof List)||((List<?>)raw).isEmpty()||((List<?>)raw).size()>128)throw new IllegalArgumentException("Secuencia de lectura no válida.");List<String> out=new ArrayList<>();for(Object item:(List<?>)raw){if(!(item instanceof String))throw new IllegalArgumentException("Etapa sin texto.");out.add(bounded((String)item,8192));}book.readings.put(key,out);}
+  Map<?,?> cursor=object(doc.get("cursor"));book.mode=integer(cursor,"mode");book.position=integer(cursor,"position");book.plane=integer(cursor,"plane");book.x=number(cursor,"x");book.y=number(cursor,"y");book.document();Map<?,?> notes=object(doc.get("notes"));if(notes.size()>128)throw new IllegalArgumentException("Máximo 128 anotaciones.");for(Map.Entry<?,?> entry:notes.entrySet()){if(!(entry.getKey() instanceof String))throw new IllegalArgumentException("Destino de nota no válido.");Map<?,?> n=object(entry.getValue());book.put((String)entry.getKey(),text(n,"name",160),text(n,"description",3000),text(n,"hint",3000),text(n,"comment",3000));}book.json();return book;
+ }
+}
