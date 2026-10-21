@@ -6,6 +6,8 @@ Prototipo abierto en desarrollo. Las interpretaciones de imágenes son aproximad
 
 ## Descargar y empezar
 
+Actualización local: **un único contacto para lienzo y matemáticas**, fotografías exploradas como hasta seis nodos reconocidos (confianza mínima 0.60) y **voz Genny incluida sin SAPI ni TTS instalado**. [Mapa de objetos](docs/IMAGEN-INTELIGENTE.md) · [Voz y pronunciación matemática](docs/VOZ-GENNY.md).
+
 Nuevo: **Marco, vacío y barridos en Matemáticas**, con aire espacial, contorno/relleno/negativo, referencia de centro y esquinas y pantalla completa Android. [Uso y correcciones](docs/EXPLORACION-MATEMATICA.md).
 
 Nuevo: **Lecciones FAO con anotaciones docentes**, lectura a petición, guía manual y repaso de notas. Dos ejemplos incluidos para evaluar con un profesor ciego. [Prueba docente](docs/PRUEBA-DOCENTE.txt) · [Formato abierto](docs/FORMATO-LECCION-FAO.md).
@@ -61,3 +63,5 @@ Consulta [la evaluación técnica y de uso](docs/EVALUACION.md), [CONTRIBUTING.m
 No necesitas programar para colaborar: describe qué esperabas escuchar, qué escuchaste, con qué equipo y qué parte resultó confusa. Evita adjuntar fotos, voces o archivos con datos de otras personas sin su consentimiento. Los archivos de sesión no se envían automáticamente a ningún servicio.
 
 Licencia MIT para el código del proyecto. Las mediciones KEMAR y los entornos Java conservan sus condiciones y atribución en [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
+[Continuidad, construcción y pendientes para otros mantenedores](CONTINUIDAD.md).

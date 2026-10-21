@@ -11,7 +11,7 @@ $speech=Get-ChildItem -LiteralPath (Join-Path $env:WINDIR 'Microsoft.NET/assembl
 $classes=Join-Path $workspace 'build/classes'
 Reset-GeneratedDirectory $classes (Join-Path $workspace 'build')
 $sources=@(Get-ChildItem -LiteralPath (Join-Path $root 'core/src'),(Join-Path $root 'audio/src') -Recurse -Filter '*.java' | ForEach-Object FullName)
-& "$Jdk/bin/javac.exe" --release 8 -encoding UTF-8 -cp "$root/tools/audio-cache/jna.jar" -d $classes @sources "$workspace/src/DesktopEngine.java"
+& "$Jdk/bin/javac.exe" --release 8 -encoding UTF-8 -cp "$root/tools/audio-cache/jna.jar" -d $classes @sources "$workspace/src/DesktopEngine.java" "$workspace/src/GennySpeech.java"
 if($LASTEXITCODE -ne 0){throw 'No se pudo compilar el motor'}
 & "$Jdk/bin/jar.exe" --create --file "$workspace/build/formas-engine.jar" -C $classes .
 if($LASTEXITCODE -ne 0){throw 'No se pudo empaquetar el motor'}
@@ -26,6 +26,7 @@ foreach($architecture in @('x32','x64')){
  & $csc "@$response"
  if($LASTEXITCODE -ne 0){throw "No se pudo compilar Windows $platform"}
  Reset-GeneratedDirectory "$output/teaching" $output;Copy-Item -Path "$root/core/assets/teaching/*.fao" -Destination "$output/teaching" -Force
+ New-Item -ItemType Directory -Force -Path "$output/voice" | Out-Null;Copy-Item -Path "$root/core/assets/voice/*" -Destination "$output/voice" -Force
  Copy-Item -LiteralPath "$workspace/build/formas-engine.jar","$root/core/assets/kemar.bin","$root/core/assets/KEMAR-NOTICE.txt","$workspace/LEEME.txt" -Destination $output -Force
  $asset=Get-Content -LiteralPath "$workspace/tools/temurin-$architecture.json" -Raw | ConvertFrom-Json
  $runtimeArch=if($architecture -eq 'x32'){'i586'}else{'amd64'}

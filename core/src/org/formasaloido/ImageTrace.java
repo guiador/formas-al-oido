@@ -13,6 +13,8 @@ public final class ImageTrace {
   Result(Geometry g,int w,int h,int t,int count,int omitted,int fg){geometry=g;width=w;height=h;threshold=t;detected=count;dropped=omitted;foreground=fg;scale=Math.min(568.0/w,418.0/h);left=(600-w*scale)/2;top=(450-h*scale)/2;}
  }
  static final class Loop {List<Geometry.Point> points;double area;Loop(List<Geometry.Point> p,double a){points=p;area=a;}}
+ /** Image placement without extracting or classifying any pixel fragments. */
+ public static Result layout(int width,int height){if(width<2||height<2||width>4096||height>4096)throw new IllegalArgumentException("Dimensiones de imagen no válidas");return new Result(new Geometry(0,new ArrayList<Geometry.Shape>()),width,height,0,0,0,0);}
  public static Result analyze(int[] pixels,int width,int height,Options input){
   if(width<2||height<2||width>4096||height>4096||pixels.length!=width*height)throw new IllegalArgumentException("Dimensiones de imagen no válidas");
   Options o=input.copy();int limit=Math.max(64,Math.min(256,o.maxDimension));double resize=Math.min(1,limit/(double)Math.max(width,height));int w=Math.max(2,(int)Math.round(width*resize)),h=Math.max(2,(int)Math.round(height*resize));int[] gray=new int[w*h],hist=new int[256];

@@ -1,0 +1,38 @@
+{
+  "source": "https://github.com/ogomez92/genny",
+  "revision": "54f409e6292119ad8a87212fc4409ecc1cdb1797",
+  "speech_sha256": "24cc0b32240c9d43be26946bb3602d8e4028f3d8cc337cc7f99113ca2b775609",
+  "sample_rate": 16000,
+  "voice": "female",
+  "language": "es",
+  "entries": 2228,
+  "bank_sha256": "67a0fd9e71cd5682680b50a32adbbe5488fa1e691da0e43466a1c14cc41e2d40",
+  "fallback": "Unknown words are spelled using Spanish letter names.",
+  "synthesis": {
+    "revision": "54f409e6292119ad8a87212fc4409ecc1cdb1797",
+    "files": {
+      "genny/__init__.py": "08f9765867014b68d698f1beeabfecd3f2bd2895befcac85702c8c689179ffb9",
+      "genny/core.py": "0e04c5792ad9061a16d3ec0ef6298810f1da87a3c112bdcc3620c8fcd73733e6",
+      "genny/filters.py": "3e9f8f0811c53c182816f91b02c2df91d3347715d445946955030394eb910b2a",
+      "genny/notes.py": "689f7eb4a4c6358b4f34cc92957121e2a537c2d9d8c9991b64a411baaa0331ef",
+      "genny/osc.py": "19f74b581e5c9303d897931c5e04e99b37b46c871945ae14a2d77748bc553913",
+      "genny/speech.py": "24cc0b32240c9d43be26946bb3602d8e4028f3d8cc337cc7f99113ca2b775609",
+      "genny_bridge.py": "48242c6b6567502d220edbe78ff2388f2e609d28e571c0be62be4b72ab0d4508",
+      "spanish_r.py": "d5124535a990f55987609d6e2832c5d56bb73fcd68e375b06c4ddb7dfb028769",
+      "genny_dsp.dll": "bad7231bbaeeb9e8cb6d28733c52272ad5d408afaac498a0c157d16c8e5f1bfe"
+    },
+    "fork_spanish_r": true,
+    "native_dsp": true,
+    "sample_rate": 16000,
+    "params": {
+      "lang": "es",
+      "voice": "female",
+      "rate": 1.12,
+      "seed": 0
+    },
+    "numpy": "1.23.3",
+    "scipy": "1.8.1",
+    "generator_sha256": "8c7bbbd27947a26cc53297d9975700440d35b0b9ecb13c3cac8b9dda09323153"
+  },
+  "cache_fingerprint": "8cf6be9267c25a50e4804599d3bf8f754bafe6b79fa29a48d1495c3c47deb357"
+}

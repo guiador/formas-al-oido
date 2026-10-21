@@ -19,6 +19,10 @@ if($LASTEXITCODE -ne 0){throw 'Pruebas de trazado y lectura fallidas'}
 if($LASTEXITCODE -ne 0){throw 'Pruebas de orientación, pausa y autoría fallidas'}
 & "$Jdk/bin/java.exe" -cp $out VisionChecks
 if($LASTEXITCODE -ne 0){throw 'Pruebas de regiones y proveedores de IA fallidas'}
+& "$Jdk/bin/java.exe" -cp $out SceneMapChecks
+if($LASTEXITCODE -ne 0){throw 'Pruebas de nodos y contacto unificado fallidas'}
+& "$Jdk/bin/java.exe" -cp $out VoiceChecks "$workspace/assets/voice/genny-es.bin" "$out/genny-matematicas.wav"
+if($LASTEXITCODE -ne 0){throw 'Pruebas de voz local Genny fallidas'}
 & "$Jdk/bin/java.exe" -cp $out MathChecks
 if($LASTEXITCODE -ne 0){throw 'Pruebas matemáticas fallidas'}
 

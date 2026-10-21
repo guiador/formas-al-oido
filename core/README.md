@@ -4,9 +4,11 @@ Android y Windows compilan estos mismos archivos Java, sin dependencias de Andro
 
 - Geometry: figuras, elementos y descripciones geométricas.
 - Curriculum: 29 actividades y variantes controladas.
-- TouchMap: contacto, proximidad, contorno, relleno y negativo.
+- TouchMap: contacto, proximidad, contorno, relleno y negativo; único estado con reinicio al cambiar de contexto y marco compartido.
 - Sound: programas de recorrido, perfiles, estéreo, HRTF y código mono.
-- ImageTrace: extracción local de contornos por contraste.
+- MathSpeech y GennyVoice: pronunciación matemática y voz local sin TTS del sistema.
+- SceneMap: detecciones filtradas y priorizadas, zonas de contacto y nodos espaciales.
+- ImageTrace: contornos por contraste para dibujos de ejemplo; no se usa para explorar fotografías reconocidas.
 
 `assets/` contiene las mediciones KEMAR y su atribución. Cada aplicación las incluye en su paquete. `tests/` verifica geometría, audio, extracción y límites; se ejecuta desde la raíz con `core/test.ps1 -Jdk RUTA`. `android/test.ps1` conserva compatibilidad con las instrucciones anteriores y delega aquí.
 

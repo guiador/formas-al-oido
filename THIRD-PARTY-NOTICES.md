@@ -1,5 +1,9 @@
 # Componentes de terceros
 
+## Voz generada con Genny
+
+El banco `core/assets/voice/genny-es.bin` se genera con el sintetizador de formantes Genny de ogomez92: https://github.com/ogomez92/genny. La revisión, parámetros y hashes están en `core/assets/voice/genny-es.json`, incluido en las aplicaciones. Se distribuye audio sintetizado, junto con un reproductor propio; no se incorpora el código Python de Genny, numpy ni scipy. Véase `docs/VOZ-GENNY.md` para alcance, deletreo de palabras nuevas y regeneración.
+
 ## Mediciones HRTF KEMAR
 
 Bill Gardner y Keith Martin, MIT Media Laboratory, 1994. Copyright MIT Media Laboratory. El conjunto se ofrece sin restricciones de uso, con atribución a sus autores al usarlo en investigación o aplicaciones comerciales.
